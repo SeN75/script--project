@@ -41,3 +41,8 @@
 # System files
 **/.DS_Store
 **/Thumbs.db
+./angular_project_template
+
+**/.env
+
+**/build
