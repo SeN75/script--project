@@ -5,7 +5,8 @@ import LessonRouter from './lesson';
 import ContentRouter from './content'
 import ExerciseRouter from './exercise';
 import FeedbackRouter from './feedback';
-import LoadDataRouter from './loadDoc'
+import LoadDataRouter from './loadDoc';
+import AuthRouter from './auth';
 const router = Router();
 
 
@@ -16,5 +17,6 @@ router.use('/api/content', ContentRouter);
 router.use('/api/exercise', ExerciseRouter)
 router.use('/api/feedback', FeedbackRouter)
 router.use('/api/loadDoc', LoadDataRouter)
+router.use('/api/auth', AuthRouter)
 
 export default router
