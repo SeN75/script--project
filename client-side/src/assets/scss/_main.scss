@@ -1,0 +1,28 @@
+.dashboard-content {
+  @apply flex flex-col gap-4;
+  @apply max-w-[1000px] w-[95%] justify-center items-center mx-auto pt-12;
+
+  & section {
+    @apply flex justify-end w-full;
+
+  }
+  & dash-table {
+    @apply w-full;
+  }
+}
+
+
+.group {
+  @apply flex flex-col gap-4;
+  & header {
+    @apply text-[24px] text-black font-bold capitalize;
+  }
+}
+
+.form {
+  @apply flex flex-col gap-4 p-6 h-full;
+}
+.action {
+  @apply self-end flex justify-center w-full border-solid  border-[1px] border-transparent border-t-gray-300 h-[62px] items-center gap-4;
+  margin-block-start: auto;
+}

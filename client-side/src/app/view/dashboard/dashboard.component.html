@@ -1,0 +1,8 @@
+<main [class.showmenu]="!isSubject">
+  <sidebar  />
+  <sidemenu *ngIf="!isSubject" [header]="page"/>
+  <section>
+      <bread-craumb [page]="page"></bread-craumb>
+      <router-outlet></router-outlet>
+  </section>
+</main>

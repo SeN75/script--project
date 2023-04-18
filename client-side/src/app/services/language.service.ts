@@ -12,7 +12,7 @@ export class LanguageService {
   dir: direction = 'ltr';
   languageSubject = new BehaviorSubject({ selected: '', dir: '' });
   constructor(private translate: TranslateService) {
-    this.ar();
+    this.en();
     // this.checkLanguageFromLoaclStorage();
   }
   checkLanguageFromLoaclStorage() {

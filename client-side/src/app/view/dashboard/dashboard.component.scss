@@ -1,0 +1,9 @@
+main  {
+  @apply grid grid-cols-[64px_1fr] ;
+  @apply border-solid border-[1px] border-green-500  bg-gray-900  text-white;
+
+  &.showmenu {
+    @apply grid-cols-[64px_200px_1fr]
+  }
+
+}
