@@ -14,6 +14,9 @@ module.exports = {
       xl: "1440px",
     },
     extend: {},
+    fontFamily: {
+      f1: ['Janna LT, Arial, sans-serif']
+    }
   },
   plugins: [],
 }

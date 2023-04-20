@@ -1,0 +1,10 @@
+.error-msg .mdc-snackbar__surface {
+  @apply bg-red-900 text-white #{!important};
+}
+.warn-msg .mdc-snackbar__surface{
+  @apply bg-yellow-600 text-black #{!important};
+
+}
+.success-msg .mdc-snackbar__surface{
+  @apply bg-green-500 text-white #{!important};
+}

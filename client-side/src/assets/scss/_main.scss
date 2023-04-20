@@ -26,3 +26,42 @@
   @apply self-end flex justify-center w-full border-solid  border-[1px] border-transparent border-t-gray-300 h-[62px] items-center gap-4;
   margin-block-start: auto;
 }
+
+
+.admin {
+  & mat-drawer-content {
+    @apply bg-cover bg-center;
+    background-image: url('../images/bg.png');
+    @apply bg-[#181818];
+  }
+  & mat-drawer {
+    @apply w-[246px];
+  }
+  & .mat-drawer-inner-container {
+    @apply bg-[#011627];
+  }
+  & .side_menu  {
+    @apply flex flex-col  p-3 gap-4 font-f1;
+    &   .subject_menu {
+      @apply list-none p-0 m-0 flex flex-col gap-1;
+      & li {
+        @apply flex gap-4 h-[50px] w-full transition-all duration-300 rounded-md  items-center px-2;
+        @apply select-none cursor-pointer;
+        & .name {
+          @apply text-white text-[15px] font-bold;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        &.active {
+          @apply bg-[#033157] transition-all duration-300;
+        }
+        &:hover {
+          @apply bg-[#1673c0] transition-all duration-300;
+        }
+      }
+    }
+  }
+
+
+}
