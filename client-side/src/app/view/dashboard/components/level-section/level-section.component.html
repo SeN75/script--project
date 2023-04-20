@@ -1,0 +1,8 @@
+<section>
+    <header> المستوى الحالي</header>
+
+    <select [formControl]="levelCtrl">
+      <option *ngFor="let lesson of lessons$ | async" [value]="lesson.id">{{lesson.title}}</option>
+    </select>
+
+</section>

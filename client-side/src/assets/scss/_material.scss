@@ -9,23 +9,93 @@
 // Be sure that you only ever include this mixin once!
 @include mat.core();
 
+$script-typography-config: mat.define-typography-config(
+  $headline-4: mat.define-typography-level(112px, 112px, 300, $font-family: 'Janna LT, Arial, sans-serif',$letter-spacing: -0.05em),
+  $headline-3: mat.define-typography-level(56px, 56px, 400, $font-family:'Janna LT, Arial, sans-serif',$letter-spacing: -0.02em),
+  $headline-2: mat.define-typography-level(45px, 48px, 400, $font-family:'Janna LT, Arial, sans-serif',$letter-spacing: -0.005em),
+  $headline-1: mat.define-typography-level(34px, 40px, 400, $font-family:'Janna LT, Arial, sans-serif'),
+  $headline-5:  mat.define-typography-level(24px, 1, 500, $font-family:'Janna LT, Arial, sans-serif'),
+  $headline-6:  mat.define-typography-level(24px, 1, 500, $font-family:'Janna LT, Arial, sans-serif'),
+  $subtitle-1: mat.define-typography-level(14px , 16px, 600, 'Janna LT, Arial, sans-serif'),
+  $subtitle-2: mat.define-typography-level(20px, 20px, 600,'Janna LT, Arial, sans-serif'),
+  $body-1: mat.define-typography-level(18px, 20px, 500,'Janna LT, Arial, sans-serif'),
+  $body-2: mat.define-typography-level(18px, 28px, 500,'Janna LT, Arial, sans-serif'),
+  $button: mat.define-typography-level(12px, 20px, 600,'Janna LT, Arial, sans-serif'),
+  $caption: mat.define-typography-level(14px, 20px, 500,'Janna LT, Arial, sans-serif'),
+  $font-family: 'Janna LT, Arial, sans-serif',
+);
+
+
+
+$primary-palette: (
+ 50: #c1e3ff,
+ 100: #97c4e9,
+ 200: #5186b1,
+ 300: #245379,
+ 400: #245379,
+ 500: rgb(40, 94, 138),
+ 600: #0a2439,
+ 700: #051929,
+ 800: #041422,
+ 900: rgb(0, 15, 28),
+ // ... continues to 900
+ contrast: (
+   50: rgba(black, 0.87),
+   100: rgba(black, 0.87),
+   200: rgba(black, 0.87),
+   300: white,
+   400: white,
+   500: white,
+   600: white,
+   700: white,
+   800: white,
+   900: white,
+ )
+ );
+$scondary-palette: (
+ 50: #c8fbd3,
+ 100: #9ef1b0,
+ 200: #84dd97,
+ 300: #5ac672,
+ 400: #46B15E,
+ 500: #2d8c41,
+ 600: #186428,
+ 700: #0c4618,
+ 800: #052a0c,
+ 900: #021b07,
+ // ... continues to 900
+ contrast: (
+   50: rgba(black, 0.87),
+   100: rgba(black, 0.87),
+   200: rgba(black, 0.87),
+   300: white,
+   400: white,
+   500: white,
+   600: white,
+   700: white,
+   800: white,
+   900: white,
+ )
+ );
+
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$script-project-primary: mat.define-palette(mat.$indigo-palette);
-$script-project-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$script-project-primary: mat.define-palette($primary-palette);
+$script-project-accent: mat.define-palette($scondary-palette);
 
 // The warn palette is optional (defaults to red).
 $script-project-warn: mat.define-palette(mat.$red-palette);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
-$script-project-theme: mat.define-light-theme((
+$script-project-theme: mat.define-dark-theme((
   color: (
     primary: $script-project-primary,
     accent: $script-project-accent,
     warn: $script-project-warn,
-  )
+  ),
+  typography: $script-typography-config
 ));
 
 // Include theme styles for core and each component used in your app.
@@ -33,7 +103,30 @@ $script-project-theme: mat.define-light-theme((
 // that you are using.
 @include mat.all-component-themes($script-project-theme);
 
+.mat-mdc-dialog-container {
+  --mdc-dialog-container-color: #010f1b;
+  --mdc-dialog-with-divider-divider-color: rgba(255, 255, 255, 0.12);
+  --mdc-dialog-subhead-color: rgba(255, 255, 255, 0.87);
+  --mdc-dialog-supporting-text-color: rgba(255, 255, 255, 0.6);
+}
 
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: #081821;
+}
+.mat-mdc-form-field-focus-overlay {
+  background-color: rgb(0, 15, 28,0.87);
+}
+.mdc-menu-surface {
+  background-color: #081821;
+}
+
+
+[mat-dialog-title]  {
+  @apply mb-4;
+  & div {
+    @apply flex justify-between text-[24px] capitalize;
+  }
+}
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

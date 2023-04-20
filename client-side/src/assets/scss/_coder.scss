@@ -1,0 +1,33 @@
+span.keyword {
+  color: #40FF3D;
+}
+span.operators {
+  color: #BB5953;
+}
+span.symbo {
+  color: #A3C7D6;
+}
+span.number {
+  color: #76DED0;
+}
+span.string {
+  color: #FD8A25;
+}
+span.funciton {
+  color: #c540ea;
+}
+span {
+  color: white;
+}
+
+.code_editor {
+  padding:0  30px;
+  background-color: #011627;
+  width: 97%;
+  margin: auto;
+  min-height: 194px;
+  border-radius: 25px;
+  font-size: 14px;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  box-shadow: 0px 0px 4px 7px rgba(184, 184, 184, 0.25);
+}

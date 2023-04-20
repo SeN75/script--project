@@ -10,7 +10,9 @@ const app = express();
 app.use(bodyParser.json({ limit: '50mb', type: 'application/json' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cros({
-    origin: process.env.PRODICTION? '': '*'
+    origin: process.env.PRODICTION  == 'true' ? '': '*',
+    allowedHeaders: [ 'content-type', 'X-Requested-With']
+
 }))
 
 dotenv.config();

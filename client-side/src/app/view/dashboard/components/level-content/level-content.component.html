@@ -1,0 +1,59 @@
+<section *ngIf="lesson$ |async as lesson">
+  <h1>{{lesson.title}}</h1>
+
+  <ng-container>
+    <div class="content-block" *ngFor="let content of contents$ | async">
+      <!-- title / discrption -->
+      <h2>{{content.title}}</h2>
+      <p>{{content.description}}</p>
+
+      <!-- sub title / subdiscrption -->
+      <h3>{{content.subtitle}}</h3>
+      <p>{{content.subdescription}}</p>
+
+      <div class="code-block" *ngFor="let exerices of content.Exercise">
+        <h2>{{exerices.header}}</h2>
+        <p>{{exerices.description}}</p>
+          <div>
+            <code-editor [code]="exerices.code" />
+          </div>
+      </div>
+    </div>
+  </ng-container>
+</section>
+<!--
+
+
+<div key={content.id} className={style.content_blcok}>
+                  <h2>{content.title}</h2>
+                  {content.subtitle && <h3>{content.subtitle}</h3>}
+                  <p className={style.description}>{content.description}</p>
+                  {content.subdescription && (
+                    <p className={style.subdescription}>
+                      {content.subdescription}
+                    </p>
+                  )}
+                  {Array.isArray(content.Exercise) &&
+                    content.Exercise.map((exericse) => {
+                        const eKey = "Key_"+exericse.id.substring(0,5);
+                        return(
+                      <React.Fragment key={exericse.id}>
+                        <h4>{exericse.header}</h4>
+                        {exericse.description && <p className={style.exerices_dsec}>{exericse.description}</p>}
+                        <CodeHighlight text={exericse.code} eKey={eKey}/>
+                        {Array.isArray(exericse.answers) &&
+                          exericse.answers.length > 0 &&
+                          exericse.answers[0] != "" && (
+                            <div>
+                              <button className={style.run_btn} onClick={() => {
+                                checkAnswer(exericse.answers, eKey)
+                              }}>Run</button>
+                            </div>
+                          )}
+                      </React.Fragment>
+                    )})}
+                </div>
+
+
+
+ -->
