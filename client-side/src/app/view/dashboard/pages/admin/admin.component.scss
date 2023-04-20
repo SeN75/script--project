@@ -12,3 +12,8 @@ mat-toolbar {
   }
  }
 }
+
+.content_grid {
+  @apply grid grid-cols-[1fr,252px] gap-8 p-8;
+}
+

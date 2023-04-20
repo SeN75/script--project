@@ -39,6 +39,12 @@ import { DashDialogSrvice } from './dialog.service';
 import { DashboardService } from './dashboard.service';
 import { MessageDialogComponent } from './dialogs/message-dialog.component';
 import { MatRippleModule } from '@angular/material/core';
+import { TabOfContentComponent } from './components/tab-of-content/tab-of-content.component';
+import { LevelSectionComponent } from './components/level-section/level-section.component';
+import { LevelContentComponent } from './components/level-content/level-content.component';
+
+import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
+import { CodeEditorComponent } from './components/code-editor.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +60,11 @@ import { MatRippleModule } from '@angular/material/core';
     ExericesComponent,
     AdminComponent,
     SubjectDialogComponent,
-    MessageDialogComponent
+    MessageDialogComponent,
+    TabOfContentComponent,
+    LevelSectionComponent,
+    LevelContentComponent,
+    CodeEditorComponent
   ],
   imports: [
 CommonModule,
@@ -78,9 +88,20 @@ CommonModule,
   MatSlideToggleModule,
   FormsModule,
   MatDialogModule,
-  MatRippleModule
+  MatRippleModule,
+  HighlightModule
 
   ],
-  providers: [IconService, DashDialogSrvice, DashboardService]
+  providers: [IconService, DashDialogSrvice, DashboardService,
+    {
+      provide: HIGHLIGHT_OPTIONS,
+      useValue: {
+        coreLibraryLoader: () => import('highlight.js/lib/core'),
+        languages: {
+          javascript: () => import('highlight.js/lib/languages/javascript'),
+        },
+      }
+    }
+  ]
 })
 export class DashboardModule { }

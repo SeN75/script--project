@@ -6,12 +6,12 @@
 
       <ul class="subject_menu">
         <ng-container *ngFor="let sub of subjects$ | async">
-          <li class="subject" routerLinkActive="active" [routerLink]="'/dashboard/admin/' +sub.id">
+          <li class="subject" [class.active]="dashSrv.currentSubject?.id == sub.id"  (click)="selectSubject(sub)">
             <span class="icon"><mat-icon svgIcon="javascript"></mat-icon> </span>
             <span class="name">{{sub.title}}</span>
-            <span *ngIf="isEdit && activePath == sub.id">
+            <span *ngIf="isEdit && dashSrv.currentSubject?.id == sub.id">
               <mat-icon matRipple (click)="subjectDialog('edit', sub)">edit</mat-icon>
-             <mat-icon matRipple (click)="deleteSubject(sub.id)" color="warn">delete</mat-icon>
+             <mat-icon matRipple (click)="deleteSubject(sub.id!)" color="warn">delete</mat-icon>
             </span>
           </li>
         </ng-container>
@@ -36,10 +36,21 @@
         <mat-icon>person</mat-icon>
       </div>
     </mat-toolbar>
-
+<!--
     <button type="button" mat-button (click)="drawer.toggle()">
       Toggle sidenav
-    </button>
+    </button> -->
+
+    <section class="content_grid">
+      <div class="content">
+        <level-content />
+      </div>
+      <div class="">
+        <tab-of-content/>
+        <level-section [lessons]="lessons" (selectedLesson)="currentLesson = $event"/>
+      </div>
+    </section>
+
   </div>
 
 </mat-drawer-container>

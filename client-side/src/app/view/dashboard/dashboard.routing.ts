@@ -15,4 +15,5 @@ export const DashboardRoutes: Routes = [
   {path: 'exerices', component: ExericesComponent},
   {path: 'admin', component: AdminComponent},
   {path: 'admin/:subjectId', component: AdminComponent},
+  {path: 'admin/:subjectId/:lessonId', component: AdminComponent},
 ]
