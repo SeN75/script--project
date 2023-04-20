@@ -1,0 +1,35 @@
+
+
+section {
+  @apply flex flex-col gap-10;
+
+  & > h1 {
+    @apply text-[48px] text-white font-f1 font-bold;
+  }
+
+  & .content-block {
+    @apply flex flex-col gap-8;
+    & > h2 {
+      @apply text-[32px] text-white font-f1 font-bold;
+    }
+    & > h2 + p {
+      @apply text-[22px] text-white font-f1 font-bold;
+    }
+    & > h3 {
+      @apply text-[28px] text-white font-f1 font-bold;
+    }
+
+  }
+  & .code-block {
+    @apply flex flex-col gap-4;
+    & > h2 {
+      @apply text-[32px] text-white font-f1 font-bold;
+    }
+    & > h2 + p {
+      @apply text-[22px] text-white font-f1 font-bold;
+    }
+    & .code {
+      direction: ltr;
+    }
+  }
+}
