@@ -4,6 +4,7 @@ import { TableDataField, TableAcion } from '../components/table.component';
 import { DashboardService } from '../dashboard.service';
 import { map } from 'rxjs';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Lesson } from './lesson.component';
 
 @Component({
   selector: 'app-subject',
@@ -138,6 +139,7 @@ export interface Subject {
   title: string,
   level: number,
   language: string,
+  Lesson?: Lesson[]
   id?: string,
 }
 

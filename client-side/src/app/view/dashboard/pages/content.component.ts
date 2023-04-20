@@ -3,6 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { TableDataField, TableAcion } from '../components/table.component';
 import { DashboardService } from '../dashboard.service';
 import { map } from 'rxjs';
+import { Exercise } from './exerices.component';
 
 @Component({
   selector: 'app-content',
@@ -95,4 +96,5 @@ export interface Content {
   subtitle?: string;
   subdescription?: string;
   lesson_id: string;
+  Exercise?: Exercise[]
 }

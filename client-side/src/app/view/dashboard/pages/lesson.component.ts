@@ -3,6 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Subject, map } from 'rxjs';
 import { TableDataField, TableAcion } from '../components/table.component';
 import { DashboardService } from '../dashboard.service';
+import { Content } from './content.component';
 
 @Component({
   selector: 'app-lesson',
@@ -81,6 +82,7 @@ export interface Lesson {
   subject_id:string,
   subject_name:string,
   id: string,
+  Content?: Content[]
 }
 
 
