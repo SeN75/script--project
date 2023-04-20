@@ -138,7 +138,7 @@ export interface Subject {
   title: string,
   level: number,
   language: string,
-  id: string,
+  id?: string,
 }
 
 
