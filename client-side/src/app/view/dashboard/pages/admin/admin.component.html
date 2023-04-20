@@ -1,0 +1,45 @@
+<mat-drawer-container autosize class="admin">
+  <mat-drawer #drawer class="" mode="side" opened>
+    <img src="../../../../../assets/images/logo.png">
+    <div class="side_menu">
+      <input class="sp_input_search" placeholder="بحث">
+
+      <ul class="subject_menu">
+        <ng-container *ngFor="let sub of subjects$ | async">
+          <li class="subject" routerLinkActive="active" [routerLink]="'/dashboard/admin/' +sub.id">
+            <span class="icon"><mat-icon svgIcon="javascript"></mat-icon> </span>
+            <span class="name">{{sub.title}}</span>
+            <span *ngIf="isEdit && activePath == sub.id">
+              <mat-icon matRipple (click)="subjectDialog('edit', sub)">edit</mat-icon>
+             <mat-icon matRipple (click)="deleteSubject(sub.id)" color="warn">delete</mat-icon>
+            </span>
+          </li>
+        </ng-container>
+        <ng-container *ngIf="isAdmin && isEdit">
+          <li class="subject" (click)="subjectDialog()">
+            <span class="name"> اضافة موضوع +</span>
+          </li>
+        </ng-container>
+      </ul>
+
+    </div>
+  </mat-drawer>
+
+  <div>
+
+    <mat-toolbar>
+      <div class="eidt" *ngIf="isAdmin">
+        <mat-slide-toggle [(ngModel)]="isEdit">edit</mat-slide-toggle>
+      </div>
+      <div class="user">
+        <div> {{user.name}}</div>
+        <mat-icon>person</mat-icon>
+      </div>
+    </mat-toolbar>
+
+    <button type="button" mat-button (click)="drawer.toggle()">
+      Toggle sidenav
+    </button>
+  </div>
+
+</mat-drawer-container>

@@ -1,0 +1,14 @@
+mat-drawer-container {
+  @apply h-full;
+}
+
+
+mat-toolbar {
+  @apply bg-[rgba(70,177,94,0.1)] flex justify-between;
+ & .user {
+  @apply flex items-center text-white text-[16px] font-bold;
+  & mat-icon {
+    @apply w-[48px] h-[48px] text-[48px] leading-[48px];
+  }
+ }
+}
