@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { DashboardComponent } from './dashboard.component';
 import { TranslateModule } from '@ngx-translate/core';
@@ -29,8 +29,16 @@ import  {MatProgressSpinnerModule}  from '@angular/material/progress-spinner';
 import { SubjectComponent } from './pages/subject.component';
 import { LessonComponent } from './pages/lesson.component';
 import { ContentComponent } from './pages/content.component';
-import { ExericesComponent } from './pages/exerices.component'
-
+import { ExericesComponent } from './pages/exerices.component';
+import { AdminComponent } from './pages/admin/admin.component'
+import {MatSidenavModule} from '@angular/material/sidenav';
+import { IconService } from 'src/app/services/icon.service';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { SubjectDialogComponent } from './dialogs/subject-dialog.component';
+import { DashDialogSrvice } from './dialog.service';
+import { DashboardService } from './dashboard.service';
+import { MessageDialogComponent } from './dialogs/message-dialog.component';
+import { MatRippleModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -43,7 +51,10 @@ import { ExericesComponent } from './pages/exerices.component'
     SubjectComponent,
     LessonComponent,
     ContentComponent,
-    ExericesComponent
+    ExericesComponent,
+    AdminComponent,
+    SubjectDialogComponent,
+    MessageDialogComponent
   ],
   imports: [
 CommonModule,
@@ -62,7 +73,14 @@ CommonModule,
   MatSnackBarModule,
   MatToolbarModule,
   MatCardModule,
-  MatProgressSpinnerModule
-  ]
+  MatProgressSpinnerModule,
+  MatSidenavModule,
+  MatSlideToggleModule,
+  FormsModule,
+  MatDialogModule,
+  MatRippleModule
+
+  ],
+  providers: [IconService, DashDialogSrvice, DashboardService]
 })
 export class DashboardModule { }
