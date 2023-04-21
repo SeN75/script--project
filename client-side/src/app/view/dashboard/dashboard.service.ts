@@ -217,13 +217,53 @@ export class DashboardService {
     })
   }
 
-
+// ====================================
+// ============= Exercise =============
+// ====================================
   getExercise(query: any  = '') {
     if(typeof query == 'object') {
       query = Object.keys(query).map((key, i )=> i == 0 ?`?${key}=${query[key]}` : `&${key}=${query[key]}`).reduce((a,b) => a+b)
     }
     return this.http.get<Exercise[]>(`${API}/exercise${query}`)
   }
+
+  addExercise(exercise: Exercise) {
+    const data = {...exercise}
+    delete data.id;
+   return this.http.post<Exercise>(`${API}/exercise`, {...data,level: +data.level, answers: data.answers.join(';'),point:+data.point}).pipe(first()).toPromise().then(success => {
+      this.alert('Create new exercise was Successfully', true)
+
+      return success
+    }).catch(error => {
+      this.logger.error('create new exercise ==> ', error)
+      this.alert('An Error happend while Create new exercise', false)
+    })
+  }
+  updateExercies(exercise:Exercise) {
+    const data = {...exercise}
+    const id = data.id
+    delete data.id;
+
+   return this.http.put<Exercise>(`${API}/exercise?id=${id}`, {...data,level: +data.level, answers: data.answers.join(';'), point:+data.point}).pipe(first()).toPromise().then(success => {
+      this.alert('Update exercise was Successfully', true)
+
+      return success
+    }).catch(error => {
+      this.logger.error('Update exercise ==> ', error)
+      this.alert('An Error happend while Update exercise', false)
+    })
+  }
+  deleletExercies(id: string) {
+   return this.http.delete<Exercise>(`${API}/exercise?id=${id}`).pipe(first()).toPromise().then(success => {
+      this.alert('Delete exercise was Successfully', true)
+
+      return true
+    }).catch(error => {
+      this.logger.error('Delete exercise ==> ', error)
+      this.alert('An Error happend while Delete exercise', false)
+    })
+  }
+
   loadExercise(query: any  = '') {
     this.getExercise(query).subscribe(v => this.exrcises.next(v))
   }

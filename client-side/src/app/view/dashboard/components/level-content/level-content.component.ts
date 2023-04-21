@@ -184,12 +184,14 @@ export class LevelContentComponent implements OnInit {
     );
   }
   exericseAction(contentIndex: number, index: number) {
+    const content = this.contentsForms.controls[contentIndex]
     const value: any =
-      this.contentsForms.controls[contentIndex].controls['exercises'].controls[
+      content.controls['exercises'].controls[
         index
       ].value;
     if (!value.id) {
-      this.dashSrv.addContent(value as Content).then((success) => {
+      value.content_id = content.value.id
+      this.dashSrv.addExercise(value).then((success) => {
         if (success)
           this.contentsForms.controls[contentIndex].controls[
             'exercises'
@@ -204,7 +206,7 @@ export class LevelContentComponent implements OnInit {
         'content value - edit -',
         this.contentsForms.controls[index].value
       );
-      this.dashSrv.updateContent(value as Content).then((success) => {
+      this.dashSrv.updateExercies(value).then((success) => {
         if (success)
           this.contentsForms.controls[contentIndex].controls[
             'exercises'
@@ -217,10 +219,24 @@ export class LevelContentComponent implements OnInit {
       'حذف ترمين',
       'هل تريد حقا حذف هذا الترمين؟',
       () => {
-        //after complete,  delete
-        this.contentsForms.controls[contentIndex].controls[
+        const content =    this.contentsForms.controls[contentIndex];
+        const exercise =     content.controls[
           'exercises'
-        ].removeAt(index);
+        ].controls[index]
+        //after complete,  delete
+        if(exercise.value.id) {
+          this.dashSrv.deleletExercies(exercise.value.id).then((res) => {
+            if(res)
+            content.controls[
+              'exercises'
+            ].removeAt(index);
+          })
+        } else {
+          content.controls[
+            'exercises'
+          ].removeAt(index)
+        }
+
       },
       'delete'
     );
