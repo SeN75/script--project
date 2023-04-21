@@ -8,7 +8,7 @@ import { AdminComponent } from "./pages/admin/admin.component";
 
 
 export const DashboardRoutes: Routes = [
-  {path: '', redirectTo: "subject", pathMatch: 'full' },
+  {path: '', redirectTo: "admin", pathMatch: 'full' },
   {path: 'subject', component: SubjectComponent},
   {path: 'lesson', component: LessonComponent},
   {path: 'content', component: ContentComponent},
