@@ -11,6 +11,7 @@ export const ExerciseSchema = z.object({
     level: z.number().default(0).optional(),
     header: z.string().optional(),
     description: z.string().optional(),
+    isDeleted: z.boolean().default(false).optional()
   });
   export const ExerciseUpdateDTOSchema = ExerciseSchema.extend({
     id: z.string().uuid().optional(),

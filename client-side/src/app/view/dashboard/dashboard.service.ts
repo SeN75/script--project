@@ -165,7 +165,9 @@ export class DashboardService {
       this.alert('An Error happend while Delete Lesson', false)
     })
   }
-
+// ====================================
+// ============== Content =============
+// ====================================
   getContent(query: any  = '') {
     if(typeof query == 'object') {
       query = Object.keys(query).map((key, i )=> i == 0 ?`?${key}=${query[key]}` : `&${key}=${query[key]}`).reduce((a,b) => a+b)
@@ -175,6 +177,47 @@ export class DashboardService {
   loadContent(query: any  = '') {
     this.getContent(query).subscribe(v => this.contents.next(v))
   }
+  getContentByLessonId(lesson_id: string) {
+    return this.http.get<Content[]>(`${API}/content?lesson_id=${lesson_id}&exercise=true`)
+  }
+
+  addContent(content: Content) {
+    const data = {...content}
+    delete data.id;
+   return this.http.post<Content>(`${API}/content`, {...data,level: +data.level}).pipe(first()).toPromise().then(success => {
+      this.alert('Create new content was Successfully', true)
+
+      return success
+    }).catch(error => {
+      this.logger.error('create new content ==> ', error)
+      this.alert('An Error happend while Create new content', false)
+    })
+  }
+  updateContent(content:Content) {
+    const data = {...content}
+    const id = data.id
+    delete data.id;
+   return this.http.put<Content>(`${API}/content?id=${id}`, {...data,level: +data.level}).pipe(first()).toPromise().then(success => {
+      this.alert('Update content was Successfully', true)
+
+      return success
+    }).catch(error => {
+      this.logger.error('Update content ==> ', error)
+      this.alert('An Error happend while Update content', false)
+    })
+  }
+  deleletContent(id: string) {
+   return this.http.delete<Content>(`${API}/content?id=${id}`).pipe(first()).toPromise().then(success => {
+      this.alert('Delete content was Successfully', true)
+
+      return true
+    }).catch(error => {
+      this.logger.error('Delete content ==> ', error)
+      this.alert('An Error happend while Delete content', false)
+    })
+  }
+
+
   getExercise(query: any  = '') {
     if(typeof query == 'object') {
       query = Object.keys(query).map((key, i )=> i == 0 ?`?${key}=${query[key]}` : `&${key}=${query[key]}`).reduce((a,b) => a+b)
@@ -184,11 +227,6 @@ export class DashboardService {
   loadExercise(query: any  = '') {
     this.getExercise(query).subscribe(v => this.exrcises.next(v))
   }
-
-  getContentByLessonId(lesson_id: string) {
-    return this.http.get<Content[]>(`${API}/content?lesson_id=${lesson_id}&exercise=true`)
-  }
-
   alert(message: string, isSuccess: boolean) {
     this.toaster.open(message, undefined, {
       panelClass: isSuccess ? 'success-msg' : 'error-msg',

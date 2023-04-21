@@ -24,7 +24,7 @@ router.get("/", async (req, res) => {
       });
   } else {
     const select = param["lesson"]
-      ? `title, id, level, language, Lesson(title, id)`
+      ? `title, id, level, language, Lesson(title, id, level)`
       : "title, id, level, language";
     const limit = param && param["limit"] ? +param["limit"] : 50;
     let request = supabase
@@ -34,7 +34,7 @@ router.get("/", async (req, res) => {
       .eq("isDeleted", false)
       .limit(limit);
     if (param["langauge"]) request = request.eq("language", param["language"]);
-
+    if(param["lesson"]) request = request.eq('Lesson.isDeleted', false)
     const { data, error } = await request;
     console.log("dafdafd ==> ", error);
 

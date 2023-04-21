@@ -93,20 +93,34 @@ router.get("/", async (req, res) => {
       });
   } else {
     const select = param['exercise'] ?  
-    'id,title, description,subdescription, subtitle, lesson_id, Exercise(*)'
+    'id,title, description,subdescription, subtitle, lesson_id, level,exercises:Exercise(*)'
     :
-    "id,title, description,subdescription, subtitle, lesson_id";
+    "id,title, description,subdescription, subtitle, lesson_id, level";
     let request = supabase
       .from(TABLE)
       .select(select)
       .eq("isActive", true)
       .eq("isDeleted", false);
+      //
     if (param["lesson_id"])
       request = request.eq("lesson_id", param["lesson_id"]);
-    
+    if(param['exercise']) 
+      request = request.eq('Exercise.isDeleted', false)
     const { data, error } = await request;
-    if (data) return res.status(HttpStatusCode.Ok).json(data as Content[]);
-    else
+
+    // if(!param['deletedExercise']) 
+    //   (data as Content[])?.map(d => d.exercises?.filter(e => e.isDeleted == false))
+    if (data) {
+      
+      // convert answer
+      if (param["exercise"]) {
+        (data as Content[]).forEach(content => content.exercises?.forEach(exericse => {
+          if(typeof exericse.answers == 'string')
+          exericse.answers = exericse.answers.split(';')
+        } ))
+      }
+      return res.status(HttpStatusCode.Ok).json(data as Content[]);
+    } else
       return res
         .status(HttpStatusCode.NotFound)
         .json({ message: error["message"], code: HttpStatusCode.NotFound });
