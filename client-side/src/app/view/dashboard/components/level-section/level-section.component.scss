@@ -12,8 +12,11 @@ border-radius: 10px;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
-& select {
+& select,& option {
   @apply w-[80%] rounded-full border-solid border-[1.5px] border-[rgba(0,0,0,0.7)] bg-[rgba(217,217,217,0.3)]   p-2;
 box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+& option {
+  @apply h-[20px];
 }
 }

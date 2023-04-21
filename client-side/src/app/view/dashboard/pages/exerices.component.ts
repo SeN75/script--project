@@ -85,7 +85,7 @@ export class ExericesComponent {
 export interface Exercise {
   level: number;
   status: boolean;
-  id: string;
+  id?: string;
   code: string;
   content_id: string;
   point: number;

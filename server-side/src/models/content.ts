@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ExerciseSchema } from "./exercise";
 
 // content
 export const ContentSchema = z.object({
@@ -12,7 +13,8 @@ export const ContentSchema = z.object({
     }),
     subdescription: z.string().optional(),
     lesson_id: z.string({ required_error: "lesson_id is required" }).uuid(),
-    level: z.number().default(0).optional()
+    level: z.number().default(0).optional(),
+    exercises: z.array(ExerciseSchema).optional()
   });
   export const ContentUpdateDTOSchema = ContentSchema.extend({
     id: z.string().uuid().optional(),

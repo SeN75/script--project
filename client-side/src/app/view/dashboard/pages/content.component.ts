@@ -88,7 +88,7 @@ export class ContentComponent {
 }
 
 export interface Content {
-  id: string;
+  id?: string;
   level: number;
   status: boolean;
   title: string;
@@ -96,5 +96,5 @@ export interface Content {
   subtitle?: string;
   subdescription?: string;
   lesson_id: string;
-  Exercise?: Exercise[]
+  exercises?: Exercise[]
 }

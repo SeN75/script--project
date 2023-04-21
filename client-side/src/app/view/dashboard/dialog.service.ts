@@ -3,6 +3,8 @@ import { MatDialog } from "@angular/material/dialog";
 import { Subject } from "./pages/subject.component";
 import { SubjectDialogComponent } from "./dialogs/subject-dialog.component";
 import { MessageDialogComponent } from "./dialogs/message-dialog.component";
+import { Lesson } from "./pages/lesson.component";
+import { LessonDialogComponent } from "./dialogs/lesson-dialog.component";
 
 
 
@@ -21,6 +23,17 @@ export class DashDialogSrvice {
       maxWidth: '90%',
       minWidth: '300px',
       data: {status, subject}
+    })
+
+    return dialogRef;
+  }
+
+  lesson(status: 'add' | 'edit' = 'add', subject_id: string,lesson?: Lesson) {
+    const dialogRef = this.dialog.open(LessonDialogComponent, {
+      maxHeight: '90%',
+      maxWidth: '90%',
+      minWidth: '300px',
+      data: {status, subject_id,lesson}
     })
 
     return dialogRef;

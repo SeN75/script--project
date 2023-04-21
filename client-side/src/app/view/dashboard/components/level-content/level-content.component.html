@@ -1,7 +1,105 @@
 <section *ngIf="lesson$ |async as lesson">
-  <h1>{{lesson.title}}</h1>
 
-  <ng-container>
+  <ng-container *ngIf="isEdit">
+    <div class="content_group row">
+      <mat-form-field>
+        <input matInput [formControl]="lessonTitleCtrl">
+      </mat-form-field>
+      <div class="content_action">
+        <button mat-raised-button color="primary" (click)="updateLesson(lesson, 'title')">
+          حفظ التعديل
+        </button>
+      </div>
+    </div>
+    <div class="content-block content_group" *ngFor="let form of contentsForms.controls; let i = index"
+      [formGroup]="form">
+      <mat-form-field>
+        <mat-label> {{i+1}} عنوان المحتوى</mat-label>
+        <input matInput formControlName="title">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>وصف للمحتوى</mat-label>
+        <textarea matInput rows="10" formControlName="description">
+        </textarea>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>عنوان فرعي</mat-label>
+        <input matInput formControlName="subtitle" />
+
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>وصف فرعي</mat-label>
+        <textarea matInput rows="10" formControlName="subdescription">
+        </textarea>
+      </mat-form-field>
+      <div class="content_action">
+        <button mat-raised-button color="primary" (click)="contentAction(i)">
+          حفظ التعديل
+        </button>
+        <button mat-stroked-button color="warn" (click)="removeContent(i)">
+          حذف
+        </button>
+      </div>
+
+      <div class="content_group" *ngIf="form.controls['id'].value">
+        <h4>التمارين/الامثلة</h4>
+        <div class="content_group" *ngFor="let exericesForm of form.controls['exercises'].controls; let j = index"
+          [formGroup]="exericesForm">
+
+          <div class="content_container">
+            <mat-form-field>
+              <mat-label>عنوان التمرين</mat-label>
+              <input matInput formControlName="header">
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>النقاط</mat-label>
+              <input matInput formControlName="point">
+            </mat-form-field>
+          </div>
+          <div class="">
+            <mat-form-field>
+              <mat-label>شرح التمرين</mat-label>
+              <textarea matInput rows="2" formControlName="description">
+            </textarea>
+            </mat-form-field>
+          </div>
+          <div class="">
+            <mat-form-field>
+              <mat-label>الكود</mat-label>
+              <textarea matInput rows="10" formControlName="code" dir="ltr">
+            </textarea>
+            </mat-form-field>
+          </div>
+          <h4>حلول التمرين</h4>
+          <div class="content_answers_group">
+            <mat-form-field *ngFor="let answer of exericesForm.controls.answers.controls">
+              <input matInput [formControl]="answer">
+            </mat-form-field>
+            <div class="">
+              <button mat-raised-button color="primary" (click)="addAnswer(exericesForm.controls.answers)"> اضافة
+                حل</button>
+              <button mat-stroked-button *ngIf="exericesForm.controls.answers.controls.length" color="warn" (click)="removeAnswer(exericesForm.controls.answers)"> حذف
+                حل</button>
+
+            </div>
+          </div>
+
+          <div class="action">
+            <button mat-raised-button color="primary" (click)="exericseAction(i,j)">تعديل التمرين</button>
+            <button mat-stroked-button color="warn" (click)="removeExericse(i,j)">حذف التمرين</button>
+          </div>
+        </div>
+        <button mat-raised-button color="primary" class="addbutton" (click)="addExericse(i)">اضافة تمرين</button>
+      </div>
+    </div>
+    <button mat-raised-button color="primary" class="addbutton" (click)="addContent()">اضافة محتوى</button>
+
+  </ng-container>
+
+  <!-- display -->
+  <ng-container *ngIf="!isEdit">
+    <h1>{{lesson.title}}</h1>
     <div class="content-block" *ngFor="let content of contents$ | async">
       <!-- title / discrption -->
       <h2>{{content.title}}</h2>
@@ -11,49 +109,13 @@
       <h3>{{content.subtitle}}</h3>
       <p>{{content.subdescription}}</p>
 
-      <div class="code-block" *ngFor="let exerices of content.Exercise">
+      <div class="code-block" *ngFor="let exerices of content.exercises">
         <h2>{{exerices.header}}</h2>
         <p>{{exerices.description}}</p>
-          <div>
-            <code-editor [code]="exerices.code" />
-          </div>
+        <div>
+          <code-editor [code]="exerices.code" />
+        </div>
       </div>
     </div>
   </ng-container>
 </section>
-<!--
-
-
-<div key={content.id} className={style.content_blcok}>
-                  <h2>{content.title}</h2>
-                  {content.subtitle && <h3>{content.subtitle}</h3>}
-                  <p className={style.description}>{content.description}</p>
-                  {content.subdescription && (
-                    <p className={style.subdescription}>
-                      {content.subdescription}
-                    </p>
-                  )}
-                  {Array.isArray(content.Exercise) &&
-                    content.Exercise.map((exericse) => {
-                        const eKey = "Key_"+exericse.id.substring(0,5);
-                        return(
-                      <React.Fragment key={exericse.id}>
-                        <h4>{exericse.header}</h4>
-                        {exericse.description && <p className={style.exerices_dsec}>{exericse.description}</p>}
-                        <CodeHighlight text={exericse.code} eKey={eKey}/>
-                        {Array.isArray(exericse.answers) &&
-                          exericse.answers.length > 0 &&
-                          exericse.answers[0] != "" && (
-                            <div>
-                              <button className={style.run_btn} onClick={() => {
-                                checkAnswer(exericse.answers, eKey)
-                              }}>Run</button>
-                            </div>
-                          )}
-                      </React.Fragment>
-                    )})}
-                </div>
-
-
-
- -->
