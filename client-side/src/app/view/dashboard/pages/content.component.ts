@@ -96,5 +96,5 @@ export interface Content {
   subtitle?: string;
   subdescription?: string;
   lesson_id: string;
-  Exercise?: Exercise[]
+  exercises?: Exercise[]
 }

@@ -1,37 +1,175 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable, map, of } from 'rxjs';
+import { Observable, map, of, first, tap } from 'rxjs';
 import { Lesson } from '../../pages/lesson.component';
 import { DashboardService } from '../../dashboard.service';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Content } from '../../pages/content.component';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { LoggerService } from 'src/app/services/logger.service';
+import { DashDialogSrvice } from '../../dialog.service';
 
 @Component({
   selector: 'level-content',
   templateUrl: './level-content.component.html',
-  styleUrls: ['./level-content.component.scss']
+  styleUrls: ['./level-content.component.scss'],
 })
-export class LevelContentComponent implements OnInit{
-  lessons: Lesson[] = []
- @Input() lesson?: Lesson
-  lesson$?: Observable<Lesson | null>
-  contents$?: Observable<Content[] | null>
-  constructor(public dashSrv:DashboardService, private actvatedRoute: ActivatedRoute, private router: Router) {
+export class LevelContentComponent implements OnInit {
+  lessons: Lesson[] = [];
+  @Input() lesson?: Lesson;
+  @Input() isEdit = true;
+  lesson$?: Observable<Lesson | null>;
+  contents$?: Observable<Content[] | null>;
 
-  }
+  lessonTitleCtrl = new FormControl<string>('', [Validators.required]);
+  contentsForms = new FormArray<
+    FormGroup<{
+      title: FormControl<string>;
+      id: FormControl<string>;
+      level: FormControl<number>;
+      description: FormControl<string>;
+      subtitle?: FormControl<string>;
+      subdescription?: FormControl<string>;
+      exercises: FormArray<FormGroup<{
+        level: FormControl<number>,
+        id: FormControl<string>,
+        code: FormControl<string>,
+        point: FormControl<number>,
+        answers: FormArray<FormControl<string>>
+        header?: FormControl<number>,
+        description?: FormControl<number>
+      }>>
+    }>
+  >([]);
+
+  constructor(
+    public dashSrv: DashboardService,
+    private actvatedRoute: ActivatedRoute,
+    private router: Router,
+    private logger: LoggerService,
+    private dialogSrv: DashDialogSrvice
+  ) {}
   ngOnInit(): void {
-
     this.loadData();
-    this.router.events.subscribe(v => {
-
-    })
-
+    this.router.events.subscribe((v) => {});
   }
   loadData() {
-    const lesson_id = (this.actvatedRoute.snapshot.paramMap.get('lesson') || -1) as number;
-    this.lesson$ = this.dashSrv.currentLesson$
-    this.contents$ = this.dashSrv.currentContents$
+    const lesson_id = (this.actvatedRoute.snapshot.paramMap.get('lesson') ||
+      -1) as number;
+    this.lesson$ = this.dashSrv.currentLesson$;
+    this.contents$ = this.dashSrv.currentContents$;
+    this.contents$.pipe(tap(() => this.contentsForms = new FormArray<FormGroup>([]))).subscribe((contents) => {
+      this.contentsForms.setValue([])
+      console.log('contentsForms  ==> ', this.contentsForms)
+      const group = contents?.map((content) => ({
+        title: content.title,
+        id: content.id,
+        level: content.level,
+        description: content.description,
+        subtitle: content.subtitle,
+        subdescription: content.subdescription,
+        exercises: content.exercises
+      }));
+      group?.forEach(g => {
+        const exercises: any = g.exercises?.map(e => {
+          return new FormGroup({
+            level: new FormControl(e.level),
+            id: new FormControl(e.id),
+            code: new FormControl(e.code),
+            point: new FormControl(e.point),
+            header:new FormControl(e.header),
+            description: new FormControl(e.description),
+            answers: new FormArray( e.answers.map(a => (new FormControl<string>(a)) ))
+          })
+        })
+        const form = new FormGroup({
+          title: new FormControl(g.title),
+          description: new FormControl(g.description+''),
+          id: new FormControl(g.id+''),
+          level: new FormControl(g.level || 0),
+          subdescription: new FormControl(g.subdescription),
+          subtitle: new FormControl(g.subtitle ),
+          exercises: new FormArray(exercises)
+        })
+        this.contentsForms.push(form as any)
+        this.logger.log('exercises ==< ', exercises);
+      })
+      this.logger.log('contentForm ==< ', group);
+      this.logger.log('contentForm ==< ', this.contentsForms);
+    });
+    this.lesson$.subscribe((lesson) => {
+      if (lesson) this.lessonTitleCtrl.setValue(lesson.title);
+    });
     // if(lesson_id) {
     //   this.lesson$ = this.dashSrv.getLessonById(lesson_id)
     // }
+  }
+  updateLesson(lesson: Lesson, field: string) {
+    this.logger.log('', lesson);
+    let value = { ...lesson };
+    if (field == 'title') value.title = this.lessonTitleCtrl.value!;
+    this.dashSrv.updateLesson(value);
+  }
+  // ===============================
+  // ========== content ============
+  // ===============================
+  addContent() {
+    this.contentsForms.push(new FormGroup({
+      description: new FormControl(''),
+      id: new FormControl(''),
+      title: new FormControl(''),
+      subdescription: new FormControl(''),
+      subtitle: new FormControl(''),
+      exercises: new FormArray([]),
+      level: new FormControl(0)
+    }) as any)
+  }
+  contentAction(index: number) {
+      const value = this.contentsForms.controls[index].value
+      if(!value.id)
+       this.logger.log('content value - add -', this.contentsForms.controls[index].value)
+      else
+        this.logger.log('content value - edit -', this.contentsForms.controls[index].value)
+
+  }
+  removeContent(index: number){
+    this.dialogSrv.message('حذف محتوى', 'هل تريد حقا حذف هذا المحتوى؟', () => {
+      //after complete,  delete
+      this.contentsForms.removeAt(index)
+    }, 'delete')
+  }
+
+  // ===============================
+  // ========== exercise ===========
+  // ===============================
+  addExericse(contentIndex: number) {
+    this.contentsForms.controls[contentIndex].controls.exercises.push(new FormGroup({
+      answers: new FormArray([]),
+      code: new FormControl(''),
+      id: new FormControl(),
+      level: new FormControl<number>(0),
+      point: new FormControl<number>(0),
+      description: new FormControl<string>(''),
+      header: new FormControl<string>(''),
+    }) as any)
+  }
+  exericseAction(contentIndex: number, index: number) {
+      const value = this.contentsForms.controls[contentIndex].controls['exercises'].controls[index].value
+      if(!value.id)
+       this.logger.log('content value - add -', this.contentsForms.controls[index].value)
+      else
+        this.logger.log('content value - edit -', this.contentsForms.controls[index].value)
+
+  }
+  removeExericse(contentIndex: number, index: number){
+    this.dialogSrv.message('حذف ترمين', 'هل تريد حقا حذف هذا الترمين؟', () => {
+      //after complete,  delete
+      this.contentsForms.controls[contentIndex].controls['exercises'].removeAt(index)
+    }, 'delete')
+  }
+  addAnswer(answer:FormArray) {
+      answer.push(new FormControl())
+  }
+  removeAnswer(answer:FormArray) {
+    answer.removeAt(answer.controls.length - 1)
   }
 }

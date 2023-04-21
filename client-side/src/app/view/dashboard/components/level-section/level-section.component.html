@@ -4,5 +4,8 @@
     <select [formControl]="levelCtrl">
       <option *ngFor="let lesson of lessons$ | async" [value]="lesson.id">{{lesson.title}}</option>
     </select>
-
+<div class="action" *ngIf="isEdit">
+  <button mat-raised-button color="primary" (click)="addLesson()">اضافة</button>
+  <button mat-stroked-button color="warn" (click)="deleteLesson()">حذف</button>
+</div>
 </section>

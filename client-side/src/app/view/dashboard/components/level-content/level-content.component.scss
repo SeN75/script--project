@@ -1,7 +1,7 @@
 
 
 section {
-  @apply flex flex-col gap-10;
+  @apply flex flex-col gap-10 ;
 
   & > h1 {
     @apply text-[48px] text-white font-f1 font-bold;
@@ -31,5 +31,9 @@ section {
     & .code {
       direction: ltr;
     }
+  }
+
+  & .addbutton{
+    @apply text-[24px] px-[2rem] w-[60%];
   }
 }

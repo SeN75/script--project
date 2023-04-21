@@ -43,11 +43,11 @@
 
     <section class="content_grid">
       <div class="content">
-        <level-content />
+        <level-content [isEdit]="isEdit"  />
       </div>
       <div class="">
-        <tab-of-content/>
-        <level-section [lessons]="lessons" (selectedLesson)="currentLesson = $event"/>
+        <tab-of-content />
+        <level-section [isEdit]="isEdit" [lessons]="lessons" (selectedLesson)="currentLesson = $event"/>
       </div>
     </section>
 

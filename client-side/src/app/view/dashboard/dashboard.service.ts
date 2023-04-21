@@ -35,7 +35,7 @@ export class DashboardService {
   constructor(private http: HttpClient, private toaster: MatSnackBar, private logger: LoggerService, private router: Router, private actvatedRoute: ActivatedRoute) {
     this.currentLesson.subscribe((v) => {
       if(v)
-        this.getContentByLessonId(v.id).subscribe((data) => {
+        this.getContentByLessonId(v.id!).subscribe((data) => {
           this.currentContents.next(data)
         })
     })
@@ -63,6 +63,9 @@ export class DashboardService {
       query = Object.keys(query).map((key, i )=> i == 0 ?`?${key}=${query[key]}` : `&${key}=${query[key]}`).reduce((a,b) => a+b)
     }
     return this.http.get<Subject[]>(`${API}/subject${query}`)
+  }
+  getSubjectById(id: string) {
+    return this.http.get<Subject>(`${API}/subject?id=${id}`)
   }
   loadSubjects() {
     this.getSubjects().subscribe(v => this.subjects.next(v))
@@ -93,6 +96,11 @@ export class DashboardService {
       this.alert('An Error happend while Update Subject', false)
     })
   }
+  updateCurrentSubject(index?: number) {
+   this.getSubjectById(this.currentSubject?.id!).pipe(first()).subscribe(data => {
+    this.setCurrentSubject(data, index)
+   })
+  }
   deleteSubject(id: string) {
    return this.http.delete<Subject>(`${API}/subject?id=${id}`).pipe(first()).toPromise().then(success => {
       this.alert('Delete Subject was Successfully', true)
@@ -103,7 +111,9 @@ export class DashboardService {
       this.alert('An Error happend while Delete Subject', false)
     })
   }
-
+// ====================================
+// ============== Lesson ==============
+// ====================================
   getLessons(query: any  = '') {
     if(typeof query == 'object') {
       query = Object.keys(query).map((key, i )=> i == 0 ?`?${key}=${query[key]}` : `&${key}=${query[key]}`).reduce((a,b) => a+b)
@@ -119,6 +129,43 @@ export class DashboardService {
   loadLessons(query: any  = '') {
     this.getLessons(query).subscribe(v => this.lessons.next(v))
   }
+
+  addLesson(lesson: Lesson) {
+    const data = {...lesson}
+    delete data.id;
+   return this.http.post<Lesson>(`${API}/lesson`, {...data,level: +data.level}).pipe(first()).toPromise().then(success => {
+      this.alert('Create new Lesson was Successfully', true)
+
+      return true
+    }).catch(error => {
+      this.logger.error('create new Lesson ==> ', error)
+      this.alert('An Error happend while Create new Lesson', false)
+    })
+  }
+  updateLesson(lesson:Lesson) {
+    const data = {...lesson}
+    const id = data.id
+    delete data.id;
+   return this.http.put<Lesson>(`${API}/lesson?id=${id}`, {...data,level: +data.level}).pipe(first()).toPromise().then(success => {
+      this.alert('Update Lesson was Successfully', true)
+
+      return true
+    }).catch(error => {
+      this.logger.error('Update Lesson ==> ', error)
+      this.alert('An Error happend while Update Lesson', false)
+    })
+  }
+  deleletLesson(id: string) {
+   return this.http.delete<Lesson>(`${API}/lesson?id=${id}`).pipe(first()).toPromise().then(success => {
+      this.alert('Delete Lesson was Successfully', true)
+
+      return true
+    }).catch(error => {
+      this.logger.error('Delete Lesson ==> ', error)
+      this.alert('An Error happend while Delete Lesson', false)
+    })
+  }
+
   getContent(query: any  = '') {
     if(typeof query == 'object') {
       query = Object.keys(query).map((key, i )=> i == 0 ?`?${key}=${query[key]}` : `&${key}=${query[key]}`).reduce((a,b) => a+b)

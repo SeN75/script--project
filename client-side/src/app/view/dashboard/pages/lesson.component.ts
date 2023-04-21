@@ -81,7 +81,7 @@ export interface Lesson {
   status:boolean,
   subject_id:string,
   subject_name:string,
-  id: string,
+  id?: string,
   Content?: Content[]
 }
 
