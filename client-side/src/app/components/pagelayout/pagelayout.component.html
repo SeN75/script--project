@@ -1,0 +1,47 @@
+<ng-template #home>
+</ng-template>
+
+<ng-template #nav>
+  <nav>
+
+    <ul>
+      <li routerLink="/dashboard" class="active">
+        ابد التعلم
+      </li>
+      <li>
+        سجل الدخول
+      </li>
+      <li>
+        معلومات عنا
+      </li>
+    </ul>
+    <button mat-icon-button (click)="snav.toggle()" class="menu-button"><mat-icon>menu</mat-icon></button>
+
+    <img src=" ../../../../../assets/images/home-logo.png">
+  </nav>
+</ng-template>
+
+
+<ng-template #side>
+  <mat-nav-list>
+    <a mat-list-item routerLink=".">ابدا التعلم</a>
+    <a mat-list-item routerLink=".">سجل الدخول</a>
+    <a mat-list-item routerLink=".">معلومات عنا </a>
+  </mat-nav-list>
+</ng-template>
+<main>
+  <section>
+
+    <mat-sidenav-container class="pagelayout" >
+      <mat-sidenav #snav [mode]="mobileQuery?.matches ? 'over' : 'side'"  [opened]="open">
+        <ng-container [ngTemplateOutlet]="sideTemplate || side"></ng-container>
+      </mat-sidenav>
+
+      <mat-sidenav-content>
+        <ng-container [ngTemplateOutlet]="navTemplate || nav" ></ng-container>
+        <ng-container [ngTemplateOutlet]="template || home"> </ng-container>
+
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  </section>
+</main>

@@ -8,14 +8,15 @@ module.exports = {
   ],
   theme: {
     screens: {
-      sm: "572px",
-      md: "768px",
+      sm: "0",
+      md: "640px",
       lg: "976px",
       xl: "1440px",
     },
     extend: {},
     fontFamily: {
-      f1: ['Janna LT, Arial, sans-serif']
+      f1: ['Janna LT, Arial, sans-serif'],
+      f2: ['Righteous', 'cursive']
     }
   },
   plugins: [],

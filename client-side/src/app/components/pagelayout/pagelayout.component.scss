@@ -1,11 +1,13 @@
+main {
+  @apply bg-cover bg-center h-full overflow-auto;
+  background-image: url('../../../assets/images/bg.png');
+  @apply bg-[#181818];
 
 
-section {
-  @apply flex flex-col w-[95%] max-w-[1350px] items-center gap-10 py-8 mx-auto;
-
-
+& section {
+  @apply h-full ;
   & nav {
-      @apply flex w-full justify-between;
+      @apply flex w-full justify-between px-4 max-w-[1350px] mx-auto mt-10;
       & ul {
         @apply md:flex sm:hidden gap-4 justify-between w-[50%] list-none font-f1 font-normal text-[1.2rem] text-white;
         & li {
@@ -17,6 +19,9 @@ section {
             @apply bg-[#ffffff30] transition-all duration-300 ease-in cursor-pointer;
           }
         }
+      }
+      & .menu-button {
+        @apply md:hidden;
       }
  }
  & > div {
@@ -35,3 +40,15 @@ section {
   }
  }
 }
+}
+
+.mat-drawer-backdrop.mat-drawer-shown {
+  background-color: rgb(10 20 24 / 60%) !important;
+}
+
+.mat-drawer-container  {
+  @apply bg-transparent  h-full #{!important} ;
+}
+
+
+
