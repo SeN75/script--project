@@ -40,19 +40,19 @@ export class DashboardService {
         })
     })
    }
-  setCurrentSubject(subject: Subject, lesson?: number) {
+  setCurrentSubject(subject: Subject,type: string ,lesson?: number) {
     this.currentSubject = {...subject};
     if(this.currentSubject.Lesson?.length) {
-      this.setCurrentLesson(this.currentSubject.Lesson[0], {subjectId: subject.id!, lesson: lesson || 0})
+      this.setCurrentLesson(this.currentSubject.Lesson[0], {subjectId: subject.id!, lesson: lesson || 0, role: type as ('admin' | 'doc')})
       this.lessons.next(this.currentSubject.Lesson)
     }
 
     // this.router.navigate(['dashboard', 'admin', subject.id,{lesson: 0}])
 
   }
-  setCurrentLesson(data: Lesson, {subjectId, lesson}:{subjectId: string, lesson:number} ) {
+  setCurrentLesson(data: Lesson, {subjectId, lesson, role}:{subjectId: string, lesson:number, role: 'admin' | 'doc'} ) {
     this.currentLesson.next( {...data});
-    this.router.navigate(['dashboard', 'admin', subjectId,{lesson}])
+    this.router.navigate(['dashboard', role, subjectId,{lesson}])
 
   }
 // ====================================
@@ -96,9 +96,9 @@ export class DashboardService {
       this.alert('An Error happend while Update Subject', false)
     })
   }
-  updateCurrentSubject(index?: number) {
+  updateCurrentSubject( type: 'admin'| 'doc', index?: number,) {
    this.getSubjectById(this.currentSubject?.id!).pipe(first()).subscribe(data => {
-    this.setCurrentSubject(data, index)
+    this.setCurrentSubject(data,type ,index)
    })
   }
   deleteSubject(id: string) {

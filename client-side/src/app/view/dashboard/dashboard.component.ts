@@ -16,13 +16,7 @@ export class DashboardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.isSubject = this.router.url.includes('subject')
-    this.router.events.subscribe(v => {
-      if(v instanceof NavigationEnd) {
-        this.isSubject = v.url.includes('subject')
-        this.page = v.url.replace(/\/dashboard\//g, '');
-      }
-    })
+
   }
 
 }

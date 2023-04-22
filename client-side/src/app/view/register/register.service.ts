@@ -10,12 +10,16 @@ import { BehaviorSubject, first } from 'rxjs';
   providedIn: 'root'
 })
 export class RegisterService {
-  private user = new BehaviorSubject<User | any>({});
+  private user = new BehaviorSubject<User>({} as User);
   get user$() {return this.user.asObservable()};
 
   constructor(
     private http: HttpClient, private toaster: MatSnackBar, private logger: LoggerService, private router: Router,
-  ) { }
+  ) {
+    this.user.subscribe(user => this.logger.log('user ==> ', user))
+    if(localStorage['scriptUser'])
+      this.user.next(JSON.parse(localStorage['scriptUser']));
+  }
 
 
 // ===================================
