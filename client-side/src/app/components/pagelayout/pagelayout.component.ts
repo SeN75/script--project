@@ -12,7 +12,8 @@ export class PagelayoutComponent {
   @Input() template: TemplateRef<any> | undefined;
   @Input() navTemplate: TemplateRef<any> | undefined;
   @Input() sideTemplate: TemplateRef<any> | undefined;
-  @Input() open  =false
+  @Input() open  = false
+  @Input() bg = true;
   private _mobileQueryListener: () => void;
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');

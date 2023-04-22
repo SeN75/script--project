@@ -1,1 +1,45 @@
-<p>signup works!</p>
+<ng-template #page>
+  <section>
+
+  <div class="register_form">
+    <div >إبدأ تتبع مستواك معنا</div>
+    <header>إنشاء حساب جديد</header>
+    <p>لديك حساب من قبل؟ <a routerLink="/register/login"> سجل دخولك</a></p>
+
+    <form [formGroup]="form">
+      <div class="register_group " [class.invalid]="controls['username'].invalid && controls['username'].errors && controls['username'].touched">
+        <label>Username *</label>
+        <div class="control">
+          <input placeholder="اسم المستخدم" formControlName="username">
+        </div>
+        <small>error</small>
+      </div>
+
+      <div class="register_group " [class.invalid]="controls['email'].invalid && controls['email'].errors && controls['email'].touched">
+        <label>Email *</label>
+        <div class="control">
+          <input placeholder="البريد الالكتروني" formControlName="email">
+        </div>
+        <small>error</small>
+      </div>
+
+      <div class="register_group" [class.invalid]="controls['password'].invalid && controls['password'].errors && controls['password'].touched">
+        <label>Password *</label>
+        <div class="control">
+          <input placeholder="كلمة المرور" formControlName="password" [type]="hide ? 'password': 'text'">
+            <mat-icon (click)="hide = !hide" matRipple>{{  hide ?'visibility' : 'visibility_off'}}</mat-icon>
+        </div>
+        <small>error</small>
+      </div>
+
+      <button class="register" mat-raised-button>
+        إنشاء حساب
+      </button>
+    </form>
+  </div>
+</section>
+
+</ng-template>
+
+
+<pagelayout [template]="page" [bg]="false"></pagelayout>

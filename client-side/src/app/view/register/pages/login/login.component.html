@@ -1,6 +1,6 @@
 <ng-template #template>
   <section>
-    <div>
+    <div class="register_form">
       <header>أهلا بعودتك</header>
       <form [formGroup]="form">
         <div class="register_group " [class.invalid]="controls['email'].invalid && controls['email'].errors && controls['email'].touched">
@@ -24,7 +24,7 @@
 
       </form>
       <p>
-        ليس لديك حساب؟ <a> سجل الان</a>
+        ليس لديك حساب؟ <a routerLink="/register/sign-up"> سجل الان</a>
       </p>
       <button mat-raised-button class="register">
         تسجيل الدخول
