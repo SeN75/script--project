@@ -46,6 +46,7 @@ import { LevelContentComponent } from './components/level-content/level-content.
 import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 import { CodeEditorComponent } from './components/code-editor.component';
 import { LessonDialogComponent } from './dialogs/lesson-dialog.component';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 @NgModule({
   declarations: [
@@ -91,7 +92,8 @@ CommonModule,
   FormsModule,
   MatDialogModule,
   MatRippleModule,
-  HighlightModule
+  HighlightModule,
+  ComponentsModule
 
   ],
   providers: [IconService, DashDialogSrvice, DashboardService,

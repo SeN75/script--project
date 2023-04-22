@@ -42,7 +42,8 @@ export class LevelSectionComponent implements OnInit {
       const { subjectId } = this.activatedRoute.snapshot.params;
       this.dashSrv.setCurrentLesson(
         this.dashSrv.currentSubject?.Lesson?.find((d) => d.id == v)!,
-        { subjectId: this.dashSrv.currentSubject?.id!, lesson: index }
+
+        { subjectId: this.dashSrv.currentSubject?.id!, lesson: index, role: this.activatedRoute.snapshot.paramMap.get('type') as ('admin' | 'doc') }
       );
     });
   }
@@ -64,7 +65,7 @@ export class LevelSectionComponent implements OnInit {
     this.dashDialog.message('حذف درس', 'هل تريد حقا حذف هذا الدرس', ()  => {
       this.dashSrv.deleletLesson(id).then(success => {
         if(success)
-          this.dashSrv.updateCurrentSubject()
+          this.dashSrv.updateCurrentSubject(this.activatedRoute.snapshot.paramMap.get('type') as ('admin' | 'doc'))
 
       })
     }, 'delete', 'حذف')

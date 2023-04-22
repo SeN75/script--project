@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { LanguageService } from './services/language.service';
+import { RegisterService } from './view/register/register.service';
 
 @Component({
   selector: 'app-root',
@@ -8,5 +9,5 @@ import { LanguageService } from './services/language.service';
 })
 export class AppComponent {
   title = 'project';
-  constructor (private lang: LanguageService) {}
+  constructor (private lang: LanguageService, private registerSrv: RegisterService) {}
 }

@@ -1,56 +1,69 @@
-<mat-drawer-container autosize class="admin">
-  <mat-drawer #drawer class="" mode="side" opened>
-    <img src="../../../../../assets/images/logo.png">
-    <div class="side_menu">
-      <input class="sp_input_search" placeholder="بحث">
+<ng-template #side>
+  <img src="../../../../../assets/images/logo.png">
+  <div class="side_menu">
+    <input class="sp_input_search" placeholder="بحث">
 
-      <ul class="subject_menu">
-        <ng-container *ngFor="let sub of subjects$ | async">
-          <li class="subject" [class.active]="dashSrv.currentSubject?.id == sub.id"  (click)="selectSubject(sub)">
-            <span class="icon"><mat-icon svgIcon="javascript"></mat-icon> </span>
-            <span class="name">{{sub.title}}</span>
-            <span *ngIf="isEdit && dashSrv.currentSubject?.id == sub.id">
-              <mat-icon matRipple (click)="subjectDialog('edit', sub)">edit</mat-icon>
-             <mat-icon matRipple (click)="deleteSubject(sub.id!)" color="warn">delete</mat-icon>
-            </span>
-          </li>
-        </ng-container>
-        <ng-container *ngIf="isAdmin && isEdit">
-          <li class="subject" (click)="subjectDialog()">
-            <span class="name"> اضافة موضوع +</span>
-          </li>
-        </ng-container>
-      </ul>
+    <ul class="subject_menu">
+      <ng-container *ngFor="let sub of subjects$ | async">
+        <li class="subject" [class.active]="dashSrv.currentSubject?.id == sub.id"  (click)="selectSubject(sub)">
+          <span class="icon"><mat-icon svgIcon="javascript"></mat-icon> </span>
+          <span class="name">{{sub.title}}</span>
+          <span *ngIf="isEdit && dashSrv.currentSubject?.id == sub.id">
+            <mat-icon matRipple (click)="subjectDialog('edit', sub)">edit</mat-icon>
+           <mat-icon matRipple (click)="deleteSubject(sub.id!)" color="warn">delete</mat-icon>
+          </span>
+        </li>
+      </ng-container>
+      <ng-container *ngIf="isAdmin && isEdit">
+        <li class="subject" (click)="subjectDialog()">
+          <span class="name"> اضافة موضوع +</span>
+        </li>
+      </ng-container>
+    </ul>
 
+  </div>
+</ng-template>
+<ng-template #nav>
+  <mat-toolbar>
+    <div class="eidt" *ngIf="isAdmin">
+      <mat-slide-toggle [(ngModel)]="isEdit">edit</mat-slide-toggle>
     </div>
+    <div class="user">
+      <div> {{user.name}}</div>
+      <mat-icon>person</mat-icon>
+    </div>
+  </mat-toolbar>
+</ng-template>
+<ng-template #page>
+
+<!--
+  <button type="button" mat-button (click)="drawer.toggle()">
+    Toggle sidenav
+  </button> -->
+
+  <section class="content_grid">
+    <div class="content">
+      <level-content [isEdit]="isEdit"  />
+    </div>
+    <div class="">
+      <tab-of-content />
+      <level-section [isEdit]="isEdit" [lessons]="lessons" (selectedLesson)="currentLesson = $event"/>
+    </div>
+  </section>
+</ng-template>
+
+<pagelayout [template]="page" [sideTemplate]="side" [navTemplate]="nav" [open]="true">
+
+</pagelayout>
+<!-- <mat-drawer-container autosize class="admin">
+  <mat-drawer #drawer class="" mode="side" opened>
+
   </mat-drawer>
 
   <div>
 
-    <mat-toolbar>
-      <div class="eidt" *ngIf="isAdmin">
-        <mat-slide-toggle [(ngModel)]="isEdit">edit</mat-slide-toggle>
-      </div>
-      <div class="user">
-        <div> {{user.name}}</div>
-        <mat-icon>person</mat-icon>
-      </div>
-    </mat-toolbar>
-<!--
-    <button type="button" mat-button (click)="drawer.toggle()">
-      Toggle sidenav
-    </button> -->
 
-    <section class="content_grid">
-      <div class="content">
-        <level-content [isEdit]="isEdit"  />
-      </div>
-      <div class="">
-        <tab-of-content />
-        <level-section [isEdit]="isEdit" [lessons]="lessons" (selectedLesson)="currentLesson = $event"/>
-      </div>
-    </section>
 
   </div>
 
-</mat-drawer-container>
+</mat-drawer-container> -->

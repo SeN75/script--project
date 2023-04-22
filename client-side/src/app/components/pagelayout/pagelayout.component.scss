@@ -1,11 +1,20 @@
+main {
+  @apply bg-cover bg-center h-full overflow-auto;
+  @apply bg-[#0D0D0D];
 
-
-section {
-  @apply flex flex-col w-[95%] max-w-[1350px] items-center gap-10 py-8 mx-auto;
-
-
+  &.bg{
+    background-image: url('../../../assets/images/bg.png');
+  }
+  &.bg-1 {
+    @screen md {
+      background-image: url('../../../assets/images/register-bg.png');
+      @apply bg-contain bg-right bg-no-repeat;
+    }
+  }
+& section {
+  @apply h-full ;
   & nav {
-      @apply flex w-full justify-between;
+      @apply flex w-[95%] justify-between  max-w-[1350px] mx-auto mt-10 relative z-10;
       & ul {
         @apply md:flex sm:hidden gap-4 justify-between w-[50%] list-none font-f1 font-normal text-[1.2rem] text-white;
         & li {
@@ -17,6 +26,9 @@ section {
             @apply bg-[#ffffff30] transition-all duration-300 ease-in cursor-pointer;
           }
         }
+      }
+      & .menu-button {
+        @apply md:hidden;
       }
  }
  & > div {
@@ -35,3 +47,15 @@ section {
   }
  }
 }
+}
+
+.mat-drawer-backdrop.mat-drawer-shown {
+  background-color: rgb(10 20 24 / 60%) !important;
+}
+
+.mat-drawer-container  {
+  @apply bg-transparent  h-full #{!important} ;
+}
+
+
+

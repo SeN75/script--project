@@ -1,0 +1,27 @@
+.register_form {
+
+ & .register_group .control {
+    background: rgba(255, 255, 255, 0.05) !important;
+  }
+}
+
+section {
+  @apply flex md:justify-end sm:justify-center max-w-[1350px] w-[95%] mx-auto;
+
+}
+
+.register_form {
+  @apply md:items-end sm:items-center md:w-auto sm:w-[85%] flex flex-col  pt-16 gap-8;
+  & > div:first-child {
+    @apply text-[#BABABA] font-f1 font-bold lg:text-[20px] md:text-[18px] sm:text-[16px];
+  }
+  & form {
+    @apply w-full items-center;
+  }
+}
+
+
+
+.register {
+  @apply rounded-full mt-8 ;
+}

@@ -42,6 +42,10 @@ export class AdminComponent implements OnInit {
   async loadData() {
     const subject =  this.activatedRouter.snapshot.paramMap.get('subjectId')
     const lesson = this.activatedRouter.snapshot.paramMap.get('lesson');
+    const type = this.activatedRouter.snapshot.paramMap.get('type') as ('admin' | 'doc');
+
+    this.isAdmin = type == 'admin';
+    this.isEdit = this.isAdmin;
     const subjects = await this.subjects$?.pipe(first()).toPromise()
     console.log(lesson)
     if(!subject  ) {
@@ -58,7 +62,7 @@ export class AdminComponent implements OnInit {
      }
      else {
        this.activePath = subject +"";
-        this.dashSrv.setCurrentSubject(subjects?.find(sub => sub.id == subject)!, (+lesson! || 0))
+        this.dashSrv.setCurrentSubject(subjects?.find(sub => sub.id == subject)!, type ,(+lesson! || 0))
      }
     //  this.lessons = this.subjects.find(s => s.id == subject)?.Lesson || [];
   }
@@ -78,6 +82,7 @@ export class AdminComponent implements OnInit {
     }, 'delete', 'حذف')
   }
   selectSubject(sub: Subject) {
-    this.dashSrv.setCurrentSubject(sub)
+    const type = this.activatedRouter.snapshot.paramMap.get('type')
+    this.dashSrv.setCurrentSubject(sub, type as any)
   }
 }
