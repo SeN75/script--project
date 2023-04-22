@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { RegisterService } from '../../register.service';
+import { LoggerService } from 'src/app/services/logger.service';
 
 @Component({
   selector: 'app-login',
@@ -13,4 +15,15 @@ export class LoginComponent {
     password: new FormControl<string>('', [Validators.required])
   })
   get controls () {return this.form.controls}
+
+  constructor(private registerSrv: RegisterService, private logger: LoggerService) {
+
+  }
+
+  login() {
+    const {value} = this.form;
+    this.logger.log('login ==> ', value)
+    if(this.form.valid)
+    this.registerSrv.login(value as any)
+  }
 }

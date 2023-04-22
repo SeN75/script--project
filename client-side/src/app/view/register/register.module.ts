@@ -12,6 +12,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatRippleModule } from '@angular/material/core';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { RegisterService } from './register.service';
 
 
 @NgModule({
@@ -29,7 +31,9 @@ import { MatRippleModule } from '@angular/material/core';
   ComponentsModule,
   ReactiveFormsModule,
   MatIconModule,
-  MatRippleModule
-  ]
+  MatRippleModule,
+  MatSnackBarModule
+  ],
+  providers: [RegisterService]
 })
 export class MainModule { }

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { RegisterService } from '../../register.service';
 
 @Component({
   selector: 'app-signup',
@@ -7,12 +8,21 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: [ '../../register.scss','./signup.component.scss',]
 })
 export class SignupComponent {
-  hide = false;
+  hide = true;
   form = new FormGroup({
-    username: new FormControl<string>('', [Validators.required, Validators.email]),
-    email: new FormControl<string>('', [Validators.required]),
+    username: new FormControl<string>('', [Validators.required,]),
+    email: new FormControl<string>('', [Validators.required,  Validators.email]),
     password: new FormControl<string>('', [Validators.required]),
   });
-
   get controls() {return this.form.controls}
+  constructor(private registerSrv: RegisterService) {
+
+  }
+
+  signup() {
+    const {value} = this.form;
+    if(this.form.valid)
+      this.registerSrv.signup(value as any)
+
+  }
 }

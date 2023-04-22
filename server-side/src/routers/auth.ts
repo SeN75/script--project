@@ -12,16 +12,19 @@ const router = Router();
 
 router.post("/login", async (req, res) => {
   const { body } = req;
-  const data = await login({ email: body.email, password: body.password });
-  if (data) return res.status(201).json(data);
+  const request: any = await login({ email: body.email, password: body.password });
+  if (request && !request['error']) return res.status(201).json(request);
+  else if (request && request['error']) return res.status(request['error'].status || 400).json(request['error'])
+  return res.status(404).json({code: 404, message: 'not found'})
 });
 router.post("/signup", async (req, res) => {
   const { body } = req;
   const { data, error } = await signup({
     email: body.email,
     password: body.password,
+    username: body.username
   });
-  if (data) return res.status(201).json(data);
+  if (data && data[0]) return res.status(201).json(data[0]);
   return res.status(401).json(error);
 });
 router.post("/reset", async (req, res) => {
@@ -34,9 +37,11 @@ router.post("/reset", async (req, res) => {
 async function signup({
   email,
   password,
+  username
 }: {
   email: string;
   password: string;
+  username?: string
 }) {
   const { data, error } = await supabase.auth.signUp({ email, password });
   if (data) {
@@ -47,6 +52,7 @@ async function signup({
         {
           id: user?.id,
           email: email,
+          username,
           point: 0,
         },
       ])
@@ -70,7 +76,9 @@ async function login({ email, password }: { email: string; password: string }) {
       .from("profiles")
       .select("*")
       .eq("id", data.user?.id);
-    return userReq.data;
+    if(userReq.data)
+    return userReq.data[0];
+    else return userReq.error
   }
   return { data, error };
 }

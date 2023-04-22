@@ -26,13 +26,13 @@
       <div class="register_group" [class.invalid]="controls['password'].invalid && controls['password'].errors && controls['password'].touched">
         <label>Password *</label>
         <div class="control">
-          <input placeholder="كلمة المرور" formControlName="password" [type]="hide ? 'password': 'text'">
-            <mat-icon (click)="hide = !hide" matRipple>{{  hide ?'visibility' : 'visibility_off'}}</mat-icon>
+          <input placeholder="كلمة المرور" formControlName="password" [type]="!hide ? 'password': 'text'">
+            <mat-icon (click)="hide = !hide" matRipple>{{  !hide ?'visibility_off' :  'visibility'}}</mat-icon>
         </div>
         <small>error</small>
       </div>
 
-      <button class="register" mat-raised-button>
+      <button class="register" mat-raised-button (click)="signup()">
         إنشاء حساب
       </button>
     </form>
