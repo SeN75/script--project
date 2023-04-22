@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:dev": "npx nodemon",
     "start": "npm run build && node build/index.js",
-    "build": "rimraf ./build && tsc"
+    "rimraf": "./node_modules/rimraf/bin.js",
+    "build": "rimraf ./build && tsc",
+    "deploy": "npm run build && firebase deploy --only functions"
   },
   "keywords": [],
   "author": "",
@@ -21,11 +23,16 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4"
   },
+  "engines": {
+    "node": "16"
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.20.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "zod": "^3.21.4"
+    "zod": "^3.21.4",
+    "firebase-admin": "^11.5.0",
+    "firebase-functions": "^4.2.0"
   }
 }
