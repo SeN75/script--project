@@ -29,8 +29,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
       },
     }),
   ],
-  providers: [],
-  bootstrap: [AppComponent, RegisterService]
+  providers: [RegisterService],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
 

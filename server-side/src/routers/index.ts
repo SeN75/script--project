@@ -7,6 +7,7 @@ import ExerciseRouter from './exercise';
 import FeedbackRouter from './feedback';
 import LoadDataRouter from './loadDoc';
 import AuthRouter from './auth';
+import ProggressRouter from './progress'
 const router = Router();
 
 
@@ -18,5 +19,6 @@ router.use('/api/exercise', ExerciseRouter)
 router.use('/api/feedback', FeedbackRouter)
 router.use('/api/loadDoc', LoadDataRouter)
 router.use('/api/auth', AuthRouter)
+router.use('/api/proggress', ProggressRouter);
 
 export default router

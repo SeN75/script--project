@@ -36,4 +36,4 @@ import { RegisterService } from './register.service';
   ],
   providers: [RegisterService]
 })
-export class MainModule { }
+export class RegisterModule { }
