@@ -1,9 +1,10 @@
-import { Request, Router } from "express";
+import e, { Request, Router } from "express";
 import { supabase } from "../lib/supabase";
 import { HttpStatusCode } from "../shared/http-status-code.enum";
 import { Content } from "../models/content";
 import { Exercise } from "../models/exercise";
-
+import * as ExericseRouter from "./exercise";
+import { User } from "../models/user";
 const router = Router();
 router.get("/", (req, res) => {
   return res.status(400).send();
@@ -21,7 +22,6 @@ router.get("/exercise", async (req, res) => {
     user_id: query["user_id"] as string,
     exercise_id: query["exercise_id"] as string,
   });
-  console.log(data);
   if (data != null) return res.status(HttpStatusCode.Accepted).json(data);
   return res
     .status(HttpStatusCode.NotFound)
@@ -63,7 +63,132 @@ router.get("/lesson", async (req, res) => {
     .status(HttpStatusCode.NotFound)
     .json({ message: "lesson not found", code: HttpStatusCode.NotFound });
 });
+router.get("/subject", async (req, res) => {
+  const { query } = req;
+  if (!query || !query["user_id"] || !query["subject_id"])
+    return res.status(HttpStatusCode.BadRequest).json({
+      message: "user_id or subject_id are missing",
+      code: HttpStatusCode.BadRequest,
+    });
 
+  const data = await checkSubjectProggress({
+    user_id: query["user_id"] as string,
+    subject_id: query["subject_id"] as string,
+  });
+  if (data != null) return res.status(HttpStatusCode.Accepted).json(data);
+  return res
+    .status(HttpStatusCode.NotFound)
+    .json({ message: "subject not found", code: HttpStatusCode.NotFound });
+});
+
+router.post("/", async (req, res) => {
+  const { body } = req;
+  // check if body exist
+  if (!body || !Object.keys(body).length)
+    return res
+      .status(HttpStatusCode.BadRequest)
+      .json({ message: "body is messing", code: HttpStatusCode.BadRequest });
+  let user: User;
+  const userReq = await supabase
+    .from("profiles")
+    .select()
+    .eq("id", body["user_id"]);
+  if (userReq.data && userReq.data[0]) user = userReq.data[0] as User;
+  else
+    return res
+      .status(HttpStatusCode.NotFound)
+      .json({ message: "user not found or user_id are messing" });
+  // check if user aleardy solve this
+  const check = await checkExerciseProggress({
+    user_id: body["user_id"],
+    exercise_id: body["exercise_id"],
+  });
+
+  if (check != null && check.isSolved)
+    return res
+      .status(HttpStatusCode.NotAcceptable)
+      .json({ message: "user already solve this exercise", check });
+  // get exercise
+  const exericseReq = await supabase
+    .from("Exercise")
+    .select()
+    .eq("id", body["exercise_id"]);
+  // check if exercise exrt
+  if (exericseReq.data != null && exericseReq.data.length) {
+    const exercise: Exercise = exericseReq.data[0];
+    exercise.answers =
+      typeof exercise.answers == "string"
+        ? exercise.answers.split(";")
+        : exercise.answers;
+    console.log("exercise ==> ", exercise);
+    // compare between answers length
+    if (exercise.answers.length && body["answers"].length) {
+      let allMatch = true;
+      console.log("1");
+      for (let i = 0; i < exercise.answers.length; i++)
+        if (exercise.answers[i] != body["answers"][i]) {
+          allMatch = false;
+          break;
+        }
+      // if not match send error message
+      if (!allMatch)
+        return res.status(400).json({
+          message: "answer dose not match",
+          code: 400,
+          expcted:
+            typeof exercise.answers == "string"
+              ? exercise.answers.split(";")
+              : exercise.answers,
+          recived: body["answers"],
+        });
+      else {
+        const newPoint = (exercise.point || 0) + user.point;
+        const newProggres = await supabase.from("progress").insert([
+          {
+            user_id: user.id,
+            exercise_id: exercise.id,
+          },
+        ]);
+        if (newProggres.status == 201) {
+          const uppdateReq = await supabase
+            .from("profiles")
+            .update({ point: newPoint })
+            .eq("id", user.id)
+            .select();
+
+          if (uppdateReq.data)
+            return res
+              .status(HttpStatusCode.Accepted)
+              .json({
+                message: "correct answer",
+                code: HttpStatusCode.Accepted,
+              });
+          else
+            return res
+              .status(HttpStatusCode.NotAcceptable)
+              .json({ message: "an error happend while update user point" });
+
+        }
+      }
+      console.log("2");
+    } else {
+      return res.status(400).json({
+        message: "answer length dose not match",
+        code: 400,
+        expcted:
+          typeof exercise.answers == "string"
+            ? exercise.answers.split(";")
+            : exercise.answers,
+        recived: body["answers"],
+      });
+    }
+  } else {
+    console.error("exercise error ==>", exericseReq);
+  }
+  return res
+    .status(HttpStatusCode.NotAcceptable)
+    .json({ message: "invalid inputs" });
+});
 async function checkExerciseProggress({
   user_id,
   exercise_id,
@@ -139,7 +264,7 @@ async function checkContentProggress({
     for (let i = 0; i < (content.exercises.length || 0); i++)
       total_points += content.exercises[i].point || 0;
 
-    for (let i = 0; i < (content.proggress.solved || 0); i++)
+    for (let i = 0; i < (content.proggress.solved.length || 0); i++)
       total_solved_points += content.proggress.solved[i].point || 0;
 
     for (let i = 0; i < (content.proggress.remaining.length || 0); i++)
@@ -149,6 +274,7 @@ async function checkContentProggress({
     content.proggress.total_solved_points = total_solved_points;
     content.proggress.total_remaining_points = total_remaining_points;
     delete content.exercises;
+    console.log('totoooo ', content)
     return content;
   }
   return null;
@@ -205,6 +331,7 @@ async function checkLessonProggress({
       total_solved_points: 0,
       total_remaining_points: 0,
     };
+    console.log(proggress)
     for (let i = 0; i < proggress.length; i++) {
       if (isSolved && !proggress[i].isSolved) isSolved = false;
       lesson.proggress.total_solved += proggress[i].total_solved || 0;
@@ -218,6 +345,77 @@ async function checkLessonProggress({
     }
     lesson.proggress.isSolved = isSolved;
     return lesson;
+  }
+  return null;
+}
+
+async function checkSubjectProggress({
+  user_id,
+  subject_id,
+}: {
+  user_id: string;
+  subject_id: string;
+}) {
+  const { data, error } = await supabase
+    .from("Subject")
+    .select("id, level,title,lessons:Lesson(id)")
+    .eq("id", subject_id);
+
+  if (data) {
+    const subject: any = data[0];
+    const proggres = [];
+    for (let i = 0; i < (subject.lessons.length || 0); i++) {
+      let lesson = subject.lessons[i];
+      const isExist = await checkLessonProggress({
+        user_id,
+        lesson_id: lesson.id,
+      });
+
+      if (isExist === undefined || isExist === null) {
+        lesson = {
+          isSolved: true,
+          total_solved: 0,
+          total_remaining: 0,
+          total: 0,
+          total_points: 0,
+          total_solved_points: 0,
+          total_remaining_points: 0,
+          lesson_id: lesson.id,
+        };
+      } else {
+        lesson = { ...isExist.proggress, lesson_id: lesson.id };
+      }
+      proggres.push(lesson);
+    }
+
+    subject.proggress = {
+      lessons: proggres,
+      isSolved: true,
+      total_solved: 0,
+      total_remaining: 0,
+      total: proggres.length,
+      total_points: 0,
+      total_solved_points: 0,
+      total_remaining_points: 0,
+    };
+
+    for (let i = 0; i < proggres.length; i++) {
+      subject.proggress.total_points += proggres[i].total_points || 0;
+      subject.proggress.total_solved_points +=
+        proggres[i].total_solved_points || 0;
+      subject.proggress.total_remaining_points +=
+        proggres[i].total_remaining_points || 0;
+    }
+
+    subject.proggress.total_solved = proggres.filter(
+      (ele) => ele.isSolved
+    ).length;
+    subject.proggress.total_remaining = proggres.filter(
+      (ele) => !ele.isSolved
+    ).length;
+    subject.proggress.isSolved = subject.proggress.total_remaining.length == 0;
+    delete subject.lessons;
+    return subject;
   }
   return null;
 }

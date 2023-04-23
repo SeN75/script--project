@@ -70,7 +70,7 @@ router.post("/", async (req, res) => {
  * @param isDeleted
  * @returns
  */
-async function getById(req: Request, isActive = true, isDeleted = false) {
+export async function getById(req: Request, isActive = true, isDeleted = false) {
   const param = req["query"];
   // chech if record id exist or not
   if (!param || !param["id"]) return null;
