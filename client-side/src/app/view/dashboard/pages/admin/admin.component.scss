@@ -14,7 +14,7 @@ mat-toolbar {
 }
 
 .content_grid {
-  @apply grid grid-cols-[1fr,252px] gap-8 p-8;
+  @apply md:grid md:grid-cols-[1fr,252px] sm:flex sm:flex-col-reverse gap-8 p-8;
 }
 
 .progress {

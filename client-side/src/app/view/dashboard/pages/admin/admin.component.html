@@ -26,6 +26,9 @@
 <ng-template #nav>
   <mat-toolbar>
     <div class="progress_section">
+      <button mat-icon-button>
+        <mat-icon>menu</mat-icon>
+      </button>
       تقدمك الحالي <div class="user_progress">
         <div class="number">
           {{progress?.total_solved || 0}} / {{progress?.total || 0}}
