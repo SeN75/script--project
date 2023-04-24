@@ -5,6 +5,7 @@ import { SubjectDialogComponent } from "./dialogs/subject-dialog.component";
 import { MessageDialogComponent } from "./dialogs/message-dialog.component";
 import { Lesson } from "./pages/lesson.component";
 import { LessonDialogComponent } from "./dialogs/lesson-dialog.component";
+import { AnswerDialogComponent } from "./dialogs/answer-dialog.component";
 
 
 
@@ -34,6 +35,21 @@ export class DashDialogSrvice {
       maxWidth: '90%',
       minWidth: '300px',
       data: {status, subject_id,lesson}
+    })
+
+    return dialogRef;
+  }
+  answer({message, text,actionName, action}: {
+    message: string,
+    text: string,
+    actionName?: string,
+    action?: () => any
+  }) {
+    const dialogRef = this.dialog.open(AnswerDialogComponent, {
+      maxHeight: '90%',
+      maxWidth: '90%',
+      minWidth: '300px',
+      data: {message,text,actionName, action}
     })
 
     return dialogRef;

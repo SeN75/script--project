@@ -9,6 +9,7 @@ import { API } from 'src/app/common/api.config';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoggerService } from 'src/app/services/logger.service';
 import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { RegisterService } from '../register/register.service';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +33,7 @@ export class DashboardService {
  currentContents = new BehaviorSubject<Content[] | null> (null);
  get currentContents$() {return this.currentContents.asObservable()}
 
-  constructor(private http: HttpClient, private toaster: MatSnackBar, private logger: LoggerService, private router: Router, private actvatedRoute: ActivatedRoute) {
+  constructor(private http: HttpClient, private toaster: MatSnackBar, private logger: LoggerService, private router: Router, private actvatedRoute: ActivatedRoute, private registerSrv: RegisterService) {
     this.currentLesson.subscribe((v) => {
       if(v)
         this.getContentByLessonId(v.id!).subscribe((data) => {
@@ -267,6 +268,72 @@ export class DashboardService {
   loadExercise(query: any  = '') {
     this.getExercise(query).subscribe(v => this.exrcises.next(v))
   }
+// ====================================
+// ============= Progress =============
+// ====================================
+
+  async sendAnswers({execise_id, userAnswer}: {execise_id: string, userAnswer: string[]}) {
+  const user = await this.registerSrv.user$.pipe(first()).toPromise();
+  this.logger.log('user answer => ', user)
+  return this.http.post(`${API}/proggress`, {
+    user_id: user?.id,
+    exercise_id: execise_id,
+    answers: userAnswer
+  }).pipe(first()).toPromise().then(success => {
+    this.logger.log('user proggress =>', success)
+    return true
+  }).catch(error => {
+    this.logger.error('answer qustion ==> ', error)
+    this.alert('حدث خطا اثناء ارسال الطلب', false);
+    return false
+  })
+}
+
+  async getExerciseUserResult({exercise_id, user_id}:{exercise_id: string, user_id?: string}) {
+    if(!user_id)
+      user_id = (await this.registerSrv.user$.pipe(first()).toPromise())!.id;
+    return this.http.get(`${API}/proggress/exercise?exercise_id=${exercise_id}&user_id=${user_id}`).pipe(first()).toPromise().then(res => {
+      this.logger.log('exericse proggress => ', res)
+      return res;
+    }).catch(error => {
+      this.logger.error('exercise proggress => ', error)
+      return false;
+    })
+}
+  async getContentUserResult({content_id, user_id}:{content_id: string, user_id?: string}) {
+    if(!user_id)
+      user_id = (await this.registerSrv.user$.pipe(first()).toPromise())!.id;
+    return this.http.get(`${API}/proggress/content?content_id=${content_id}&user_id=${user_id}`).pipe(first()).toPromise().then(res => {
+      this.logger.log('content proggress => ', res)
+      return res;
+    }).catch(error => {
+      this.logger.error('content proggress => ', error)
+      return false;
+    })
+}
+  async getLessonUserResult({lesson_id, user_id}:{lesson_id: string, user_id?: string}) {
+    if(!user_id)
+      user_id = (await this.registerSrv.user$.pipe(first()).toPromise())!.id;
+    return this.http.get(`${API}/proggress/lesson?lesson_id=${lesson_id}&user_id=${user_id}`).pipe(first()).toPromise().then(res => {
+      this.logger.log('lessont proggress => ', res)
+      return res;
+    }).catch(error => {
+      this.logger.error('lessont proggress => ', error)
+      return false;
+    })
+}
+
+  async getSubjectUserResult({subject_id, user_id}:{subject_id: string, user_id?: string}) {
+    if(!user_id) {}
+      user_id = (await this.registerSrv.user$.pipe(first()).toPromise())!.id;
+    return this.http.get(`${API}/proggress/subject?subject_id=${subject_id}&user_id=${user_id}`).pipe(first()).toPromise().then(res => {
+      this.logger.log('subjectt proggress => ', res)
+      return res;
+    }).catch(error => {
+      this.logger.error('subjectt proggress => ', error)
+      return false;
+    })
+}
   alert(message: string, isSuccess: boolean) {
     this.toaster.open(message, undefined, {
       panelClass: isSuccess ? 'success-msg' : 'error-msg',

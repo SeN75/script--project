@@ -47,6 +47,7 @@ import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 import { CodeEditorComponent } from './components/code-editor.component';
 import { LessonDialogComponent } from './dialogs/lesson-dialog.component';
 import { ComponentsModule } from 'src/app/components/components.module';
+import { AnswerDialogComponent } from './dialogs/answer-dialog.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,8 @@ import { ComponentsModule } from 'src/app/components/components.module';
     LevelSectionComponent,
     LevelContentComponent,
     CodeEditorComponent,
-    LessonDialogComponent
+    LessonDialogComponent,
+    AnswerDialogComponent
   ],
   imports: [
 CommonModule,

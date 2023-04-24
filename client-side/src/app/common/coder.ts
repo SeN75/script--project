@@ -52,6 +52,7 @@ export function converter(text: string, eKey: string){
   ${text}
   </code>
   </pre>
+  <div id="run" class="${eKey}"></div>
   </div>`;
 }
 

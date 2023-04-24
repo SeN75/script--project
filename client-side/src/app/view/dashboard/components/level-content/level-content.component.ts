@@ -83,7 +83,7 @@ export class LevelContentComponent implements OnInit {
               header: new FormControl(e.header),
               description: new FormControl(e.description),
               answers: new FormArray(
-                e.answers.map((a) => new FormControl<string>(a))
+                e.answers ? e.answers?.map((a) => new FormControl<string>(a)) : []
               ),
             });
           });
@@ -216,8 +216,8 @@ export class LevelContentComponent implements OnInit {
   }
   removeExericse(contentIndex: number, index: number) {
     this.dialogSrv.message(
-      'حذف ترمين',
-      'هل تريد حقا حذف هذا الترمين؟',
+      'حذف تمرين',
+      'هل تريد حقا حذف هذا التمرين؟',
       () => {
         const content =    this.contentsForms.controls[contentIndex];
         const exercise =     content.controls[
