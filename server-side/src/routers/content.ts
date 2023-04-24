@@ -115,7 +115,7 @@ router.get("/", async (req, res) => {
       // convert answer
       if (param["exercise"]) {
         (data as Content[]).forEach(content => content.exercises?.forEach(exericse => {
-          if(typeof exericse.answers == 'string')
+          if(typeof exericse.answers == 'string' && exericse.answers != "")
           exericse.answers = exericse.answers.split(';')
         } ))
       }

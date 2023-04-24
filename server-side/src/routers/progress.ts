@@ -84,6 +84,7 @@ router.get("/subject", async (req, res) => {
 router.post("/", async (req, res) => {
   const { body } = req;
   // check if body exist
+  console.log( 'body ==>',body)
   if (!body || !Object.keys(body).length)
     return res
       .status(HttpStatusCode.BadRequest)
@@ -109,11 +110,13 @@ router.post("/", async (req, res) => {
       .status(HttpStatusCode.NotAcceptable)
       .json({ message: "user already solve this exercise", check });
   // get exercise
+  console.log('before', body["exercise_id"])
   const exericseReq = await supabase
     .from("Exercise")
     .select()
     .eq("id", body["exercise_id"]);
   // check if exercise exrt
+  console.log('exericseReq ==> ',exericseReq)
   if (exericseReq.data != null && exericseReq.data.length) {
     const exercise: Exercise = exericseReq.data[0];
     exercise.answers =
@@ -199,6 +202,9 @@ async function checkExerciseProggress({
   const res: any = await supabase
     .from("Exercise")
     .select("id, created_at, point, level, answers")
+    .eq('isDeleted', false)
+    .neq('answers', '' || null )
+    .eq('isActive', true)
     .eq("id", exercise_id);
   if (res.data && res.data[0]) {
     const { data, error } = await supabase
@@ -208,11 +214,14 @@ async function checkExerciseProggress({
       .eq("exercise_id", exercise_id);
     if (data && data[0]) {
       res.data[0].isSolved = true;
-      res.data[0].isExercise = res.data[0].answers.split(";").length > 0;
+      res.data[0].isExercise = res.data[0].answers != '' && res.data[0].answers.split(";").length > 0;
       return res.data[0];
-    } else if (!error) {
+
+    } else if(!data?.length) 
+    return null; 
+    else if (!error) {
       res.data[0].isSolved = false;
-      res.data[0].isExercise = res.data[0].answers.split(";").length > 0;
+      res.data[0].isExercise =res.data[0].answers != '' && res.data[0].answers.split(";").length > 0;
       return res.data[0];
     }
   }
@@ -229,6 +238,8 @@ async function checkContentProggress({
   const { data } = await supabase
     .from("Content")
     .select("id,level,exercises:Exercise(id,point,answers)")
+    .eq('isDeleted', false)
+    .eq('isActive', true)
     .eq("id", content_id);
   // console.log(data)
   if (data && data[0]) {
@@ -241,16 +252,23 @@ async function checkContentProggress({
       });
       if (isExist === undefined || isExist === null) {
         execies.isSolved = false;
-        execies.isExercise = false;
+        execies.isExercise = execies.answers !== undefined && execies.answers !== null && execies.answers != '' ;
       } else {
         execies.isSolved = isExist.isSolved;
         execies.isExercise = isExist.isExercise;
       }
     }
+    // console.log('exe pro => ', isE)
+    let isSolved = true;
+    for(let i =0; i < content.exercises.length; i++)
+        if(!(content.exercises[i].isSolved) && content.exercises[i].isExercise){
+           
+            isSolved = false
+        }
     content.proggress = {};
     const exercises: any[] =
       content.exercises.filter((e: any) => e.isExercise) || [];
-    content.proggress.isSolved = exercises?.every((e: Exercise) => e.isSolved);
+    content.proggress.isSolved = isSolved;
     content.proggress.remaining =
       exercises?.filter((e: Exercise) => e.isSolved == false) || [];
     content.proggress.solved =
@@ -261,8 +279,8 @@ async function checkContentProggress({
     let total_points = 0;
     let total_solved_points = 0;
     let total_remaining_points = 0;
-    for (let i = 0; i < (content.exercises.length || 0); i++)
-      total_points += content.exercises[i].point || 0;
+    for (let i = 0; i < (exercises.length || 0); i++)
+      total_points += exercises[i].point || 0;
 
     for (let i = 0; i < (content.proggress.solved.length || 0); i++)
       total_solved_points += content.proggress.solved[i].point || 0;
@@ -273,7 +291,8 @@ async function checkContentProggress({
     content.proggress.total_points = total_points;
     content.proggress.total_solved_points = total_solved_points;
     content.proggress.total_remaining_points = total_remaining_points;
-    delete content.exercises;
+     content.exercises;
+
     console.log('totoooo ', content)
     return content;
   }
@@ -290,8 +309,10 @@ async function checkLessonProggress({
   const { data, error } = await supabase
     .from("Lesson")
     .select("id, level,title,contents:Content(id)")
+    .eq('isDeleted', false)
+    .eq('isActive', true)
     .eq("id", lesson_id);
-  const proggress = [];
+  let proggress = [];
   if (data && data[0]) {
     const lesson: any = data[0];
     for (let i = 0; i < (lesson.contents?.length || 0); i++) {
@@ -319,8 +340,8 @@ async function checkLessonProggress({
       proggress.push(content);
     }
     delete lesson.contents;
-
-    // lesson.contents = proggress;
+    proggress = proggress.filter(e => e.total > 0);
+    lesson.contents = proggress;
     let isSolved = true;
     lesson.proggress = {
       isSolved: true,
@@ -333,10 +354,10 @@ async function checkLessonProggress({
     };
     console.log(proggress)
     for (let i = 0; i < proggress.length; i++) {
-      if (isSolved && !proggress[i].isSolved) isSolved = false;
-      lesson.proggress.total_solved += proggress[i].total_solved || 0;
-      lesson.proggress.total_remaining += proggress[i].total_remaining || 0;
-      lesson.proggress.total += proggress[i].total || 0;
+      if (isSolved && !proggress[i].isSolved  ) isSolved = false;
+      lesson.proggress.total_solved += proggress[i].isSolved ? 1 : 0 ;
+      lesson.proggress.total_remaining += !proggress[i].isSolved ? 1 : 0;
+      lesson.proggress.total += proggress[i].total > 0 ? 1 : 0;
       lesson.proggress.total_points += proggress[i].total_points || 0;
       lesson.proggress.total_solved_points +=
         proggress[i].total_solved_points || 0;
@@ -359,11 +380,13 @@ async function checkSubjectProggress({
   const { data, error } = await supabase
     .from("Subject")
     .select("id, level,title,lessons:Lesson(id)")
+    .eq('isDeleted', false)
+    .eq('isActive', true)
     .eq("id", subject_id);
 
   if (data) {
     const subject: any = data[0];
-    const proggres = [];
+    let proggres = [];
     for (let i = 0; i < (subject.lessons.length || 0); i++) {
       let lesson = subject.lessons[i];
       const isExist = await checkLessonProggress({
@@ -385,9 +408,10 @@ async function checkSubjectProggress({
       } else {
         lesson = { ...isExist.proggress, lesson_id: lesson.id };
       }
+      console.log('lesson log ==> ', lesson)
       proggres.push(lesson);
     }
-
+    proggres = proggres.filter(e => e.total > 0)
     subject.proggress = {
       lessons: proggres,
       isSolved: true,

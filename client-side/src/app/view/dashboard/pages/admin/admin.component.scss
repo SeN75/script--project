@@ -17,3 +17,18 @@ mat-toolbar {
   @apply grid grid-cols-[1fr,252px] gap-8 p-8;
 }
 
+.progress {
+@apply w-[65px] h-[65px] #{!important};
+}
+
+.progress_section {
+  @apply flex gap-2 items-center;
+}
+
+.user_progress {
+  @apply w-[65px] h-[65px] relative flex justify-center items-center text-white font-f1 text-[12px];
+  & mat-progress-spinner {
+    @apply absolute;
+  }
+
+}

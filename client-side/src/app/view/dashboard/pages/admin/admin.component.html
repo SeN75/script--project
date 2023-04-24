@@ -25,7 +25,21 @@
 </ng-template>
 <ng-template #nav>
   <mat-toolbar>
+    <div class="progress_section">
+      تقدمك الحالي <div class="user_progress">
+        <div class="number">
+          {{progress?.total_solved || 0}} / {{progress?.total || 0}}
+        </div>
+        <mat-progress-spinner
+        class="progress"
+        color="primary"
+        mode="determinate"
+        [value]="progress?.value || 0">
+    </mat-progress-spinner>
+      </div>
+    </div>
     <div class="eidt" *ngIf="isAdmin">
+
       <mat-slide-toggle [(ngModel)]="isEdit">edit</mat-slide-toggle>
     </div>
     <div class="user">

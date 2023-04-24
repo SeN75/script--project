@@ -1,6 +1,8 @@
 import { Component, Input, ViewChild, AfterViewInit, ElementRef, Renderer2 } from '@angular/core';
 import { converter } from 'src/app/common/coder';
 import { Exercise } from '../pages/exerices.component';
+import { DashDialogSrvice } from '../dialog.service';
+import { DashboardService } from '../dashboard.service';
 @Component({
   selector: 'code-editor',
   template: `
@@ -25,7 +27,7 @@ export class CodeEditorComponent implements AfterViewInit{
   @Input() exercise!: Exercise
   @ViewChild('codeBlcok', { static: false }) codeBlcok !: ElementRef<HTMLElement>;
   key: string = ''
-  constructor(private renderer:Renderer2) {
+  constructor(private renderer:Renderer2, private dashDialog: DashDialogSrvice, private dashSrv: DashboardService) {
 
   }
   ngAfterViewInit(): void {
@@ -47,9 +49,10 @@ export class CodeEditorComponent implements AfterViewInit{
     let allChecked = true;
     const notCorrect = []
     const answers = this.exercise.answers;
+    const userAnswer = []
     for(let i =0; i < inputs.length; i++) {
       const input = inputs[i];
-
+      userAnswer.push(input.value)
       if(input.value != answers[i]) {
       allChecked = false;
       notCorrect.push({
@@ -62,7 +65,14 @@ export class CodeEditorComponent implements AfterViewInit{
     }
     // alert message
     if(!allChecked) {
+      this.dashDialog.answer({message: "محاولة خاطئة 🫠", text: 'الرجاء المحاولة مرة اخرى'})
       console.log(notCorrect)
+    }
+    else {
+      this.dashSrv.sendAnswers({execise_id: this.exercise.id!,userAnswer}).then(success => {
+      this.dashDialog.answer({message: "مبرووووووك !🥳", text: 'حلك صح، تم اضافة '+this.exercise.point+' نقطة الى حسابك'})
+
+      })
     }
   }
 }

@@ -19,6 +19,9 @@ export class AdminComponent implements OnInit {
   isEdit = true;
   currentSubject = ''
   currentLesson?: Lesson;
+  progress: any = {
+
+  };
   lessons: Lesson [] = []
   user = {
     email: 'admin@script-project.com',
@@ -81,8 +84,19 @@ export class AdminComponent implements OnInit {
       })
     }, 'delete', 'حذف')
   }
-  selectSubject(sub: Subject) {
+  async selectSubject(sub: Subject) {
     const type = this.activatedRouter.snapshot.paramMap.get('type')
     this.dashSrv.setCurrentSubject(sub, type as any)
+    setTimeout(async () => {
+
+      const user: any = await this.dashSrv.getSubjectUserResult({subject_id: sub.id!})
+      if(user && user.proggress){
+        const total = (user.proggress.total_solved / user.proggress.total) * 100;
+        this.progress = user.proggress
+        this.progress.value = total;
+        console.log(total)
+      }
+      console.log(user)
+    }, 1000)
   }
 }
