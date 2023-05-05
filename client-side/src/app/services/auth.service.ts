@@ -4,19 +4,24 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { LoggerService } from 'src/app/services/logger.service';
 import { API } from 'src/app/common/api.config';
-import { BehaviorSubject, first } from 'rxjs';
+import { BehaviorSubject, first, of, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class RegisterService {
+export class AuthService {
   private user = new BehaviorSubject<User>({} as User);
-  get user$() {return this.user.asObservable()};
-
+  get user$() {
+    return this.user.asObservable();
+  }
+  userData: User | null = null
   constructor(
     private http: HttpClient, private toaster: MatSnackBar, private logger: LoggerService, private router: Router,
   ) {
-    this.user.subscribe(user => this.logger.log('user ==> ', user))
+    this.user$.subscribe(user => {
+      this.userData = user;
+      this.logger.log('userData ==> ', this.userData)
+    })
     if(localStorage['scriptUser'])
       this.user.next(JSON.parse(localStorage['scriptUser']));
   }
@@ -29,13 +34,16 @@ export class RegisterService {
 
 login(data: LoginCredential) {
 
- return this.http.post<User>(`${API}/auth/login`, data).pipe(first()).toPromise()
+ return this.http.post<User>(`${API}/auth/login`, data).pipe(first(), switchMap(userData => {
+  this.user.next(userData);
+  this.logger.log('after change userData ==> ', this.userData)
+  return of(userData)
+ })).toPromise()
  .then((user) => {
-  this.logger.log('success loggedin!' , user)
   if(user) {
-    this.router.navigate(['home'])
+    const url = '/dashboard/'+ (user.role == 'admin' ? 'admin' : 'doc');
+    this.router.navigateByUrl(url)
     localStorage['scriptUser'] = JSON.stringify(user);
-    this.user.next(user);
   }
   return user
   })

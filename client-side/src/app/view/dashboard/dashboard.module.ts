@@ -48,6 +48,7 @@ import { CodeEditorComponent } from './components/code-editor.component';
 import { LessonDialogComponent } from './dialogs/lesson-dialog.component';
 import { ComponentsModule } from 'src/app/components/components.module';
 import { AnswerDialogComponent } from './dialogs/answer-dialog.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { AnswerDialogComponent } from './dialogs/answer-dialog.component';
     LevelContentComponent,
     CodeEditorComponent,
     LessonDialogComponent,
-    AnswerDialogComponent
+    AnswerDialogComponent,
+    ProfileComponent
   ],
   imports: [
 CommonModule,
@@ -99,15 +101,7 @@ CommonModule,
 
   ],
   providers: [IconService, DashDialogSrvice, DashboardService,
-    {
-      provide: HIGHLIGHT_OPTIONS,
-      useValue: {
-        coreLibraryLoader: () => import('highlight.js/lib/core'),
-        languages: {
-          javascript: () => import('highlight.js/lib/languages/javascript'),
-        },
-      }
-    }
+
   ]
 })
 export class DashboardModule { }

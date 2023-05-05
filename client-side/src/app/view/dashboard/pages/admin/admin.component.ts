@@ -5,6 +5,8 @@ import { Subject } from '../subject.component';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { DashDialogSrvice } from '../../dialog.service';
 import { Lesson } from '../lesson.component';
+import { AuthService } from 'src/app/services/auth.service';
+import { LoggerService } from 'src/app/services/logger.service';
 
 @Component({
   selector: 'app-admin',
@@ -23,14 +25,17 @@ export class AdminComponent implements OnInit {
 
   };
   lessons: Lesson [] = []
-  user = {
+  user: any  = {
     email: 'admin@script-project.com',
     name: 'admin script'
   }
   activePath = ''
-  constructor(public dashSrv: DashboardService,
+  constructor(
+    public dashSrv: DashboardService,
     private dashDialog: DashDialogSrvice,
     private activatedRouter: ActivatedRoute,
+    private registerSrv: AuthService,
+    private logger: LoggerService,
     private router: Router) {
 
   }
@@ -39,13 +44,16 @@ export class AdminComponent implements OnInit {
       this.subjects = data;
       return data
     }));
-
+    this.registerSrv.user$.subscribe(data =>{
+      this.user = data;
+      this.logger.log('userData ==> ', data)
+    })
     this.loadData();
   }
   async loadData() {
     const subject =  this.activatedRouter.snapshot.paramMap.get('subjectId')
     const lesson = this.activatedRouter.snapshot.paramMap.get('lesson');
-    const type = this.activatedRouter.snapshot.paramMap.get('type') as ('admin' | 'doc');
+    const type =  this.router.url.includes('admin') ? 'admin' : 'doc';
 
     this.isAdmin = type == 'admin';
     this.isEdit = this.isAdmin;
