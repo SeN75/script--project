@@ -60,16 +60,16 @@ export class AdminComponent implements OnInit {
     const subjects = await this.subjects$?.pipe(first()).toPromise()
     console.log(lesson)
     if(!subject  ) {
-      // this.subjects$?.pipe(first(), map(data => data[0])).subscribe(subject => {
-      //     if(lesson)
-      //     this.router.navigate(['dashboard', 'admin', subject.id,{lesson}])
-      //     else {
-      //       console.log('here')
-      //       this.router.navigate(['dashboard', 'admin', subject.id,{lesson: 0}])
-      //       this.lessons = subject.Lesson || []
-      //     }
-      //     this.dashSrv.setCurrentSubject(subject, (+lesson! || 0))
-      // })
+      this.subjects$?.pipe(first(), map(data => data[0])).subscribe(subject => {
+          if(lesson)
+          this.router.navigate(['dashboard', 'admin', subject.id,{lesson}])
+          else {
+            console.log('here')
+            this.router.navigate(['dashboard', 'admin', subject.id,{lesson: 0}])
+            this.lessons = subject.Lesson || []
+          }
+          this.dashSrv.setCurrentSubject(subject, type, 0)
+      })
      }
      else {
        this.activePath = subject +"";
@@ -93,8 +93,8 @@ export class AdminComponent implements OnInit {
     }, 'delete', 'حذف')
   }
   async selectSubject(sub: Subject) {
-    const type = this.activatedRouter.snapshot.paramMap.get('type')
-    this.dashSrv.setCurrentSubject(sub, type as any)
+    const type = this.router.url.includes('admin') ? 'admin' : 'doc'
+    this.dashSrv.setCurrentSubject(sub, type , 0)
     setTimeout(async () => {
 
       const user: any = await this.dashSrv.getSubjectUserResult({subject_id: sub.id!})
@@ -105,6 +105,6 @@ export class AdminComponent implements OnInit {
         console.log(total)
       }
       console.log(user)
-    }, 1000)
+    }, 0)
   }
 }

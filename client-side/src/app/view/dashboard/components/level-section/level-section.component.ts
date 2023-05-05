@@ -35,6 +35,7 @@ export class LevelSectionComponent implements OnInit {
       // this.loadData()
     });
     this.levelCtrl.valueChanges.subscribe((v) => {
+
       // this.router.navigate(['dashboard', 'admin', this.subject_id,{lesson: this.lessons.findIndex(d => d.id == v)}])
       const index = this.dashSrv.currentSubject?.Lesson?.findIndex(
         (d) => d.id == v
@@ -43,7 +44,7 @@ export class LevelSectionComponent implements OnInit {
       this.dashSrv.setCurrentLesson(
         this.dashSrv.currentSubject?.Lesson?.find((d) => d.id == v)!,
 
-        { subjectId: this.dashSrv.currentSubject?.id!, lesson: index, role: this.activatedRoute.snapshot.paramMap.get('type') as ('admin' | 'doc') }
+        { subjectId: this.dashSrv.currentSubject?.id!, lesson: index, role: this.router.url.includes('admin') ? 'admin' : 'doc' }
       );
     });
   }
@@ -60,6 +61,8 @@ export class LevelSectionComponent implements OnInit {
 
     this.dashDialog.lesson('add', this.dashSrv.currentSubject?.id!)
   }
+
+
   deleteLesson() {
     const id = this.levelCtrl.value!
     this.dashDialog.message('حذف درس', 'هل تريد حقا حذف هذا الدرس', ()  => {

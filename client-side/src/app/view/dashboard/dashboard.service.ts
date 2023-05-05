@@ -65,14 +65,19 @@ export class DashboardService {
     });
   }
   setCurrentSubject(subject: Subject, type: string, lesson?: number) {
+    this.logger.log('setCurrentSubject ==> ', subject)
     this.currentSubject = { ...subject };
     if (this.currentSubject.Lesson?.length) {
+      this.lessons.next(this.currentSubject.Lesson);
       this.setCurrentLesson(this.currentSubject.Lesson[0], {
         subjectId: subject.id!,
         lesson: lesson || 0,
         role: type as 'admin' | 'doc',
       });
-      this.lessons.next(this.currentSubject.Lesson);
+      this.logger.log('here')
+    } else {
+      this.currentLesson.next(null)
+      this.lessons.next([]);
     }
 
     // this.router.navigate(['dashboard', 'admin', subject.id,{lesson: 0}])
@@ -82,9 +87,10 @@ export class DashboardService {
     {
       subjectId,
       lesson,
-      role,
-    }: { subjectId: string; lesson: number; role: 'admin' | 'doc' }
+      role = 'doc',
+    }: { subjectId: string; lesson: number; role: 'admin' | 'doc'  }
   ) {
+    this.logger.log('data ==> ',  {role, subjectId, lesson })
     this.currentLesson.next({ ...data });
     this.router.navigate(['dashboard', role, subjectId, { lesson }]);
   }
