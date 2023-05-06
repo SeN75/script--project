@@ -47,6 +47,9 @@ mat-toolbar {
 }
 .container_side {
   @apply flex flex-col h-full ;
+  & > img {
+    @apply cursor-pointer;
+  }
 }
 
 .side_menu {

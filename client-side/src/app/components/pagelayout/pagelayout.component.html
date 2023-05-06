@@ -8,9 +8,18 @@
       <li routerLink="/dashboard"  class="active">
         ابد التعلم
       </li>
-      <li routerLink="/register">
-        سجل الدخول
-      </li>
+      <ng-container  *ngIf="user$ | async as user">
+
+        <li routerLink="/register" *ngIf="!user.username">
+          سجل الدخول
+        </li>
+        <li routerLink="/profile"  *ngIf="user.username">
+          <div class="user">
+            <div> {{user.username}}</div>
+            <mat-icon>person</mat-icon>
+          </div>
+        </li>
+      </ng-container>
       <li  (click)="aboutus()">
         معلومات عنا
       </li>
@@ -24,10 +33,17 @@
 
 <ng-template #side>
   <mat-nav-list>
-    <a mat-list-item routerLink="/dashboard">ابدا التعلم</a>
-    <a mat-list-item routerLink="/register">سجل الدخول</a>
-    <a mat-list-item  (click)="aboutus()">معلومات عنا </a>
-  </mat-nav-list>
+    <ng-container *ngIf="user$ | async as user">
+      <a mat-list-item routerLink="/profile" *ngIf="user.username" >
+        <div class="user-mob"> {{user.username}}       <mat-icon>person</mat-icon></div>
+
+      </a>
+      <a mat-list-item routerLink="/dashboard">ابدا التعلم</a>
+
+      <a mat-list-item routerLink="/register" *ngIf="!user.username">سجل الدخول</a>
+      <a mat-list-item  (click)="aboutus()">معلومات عنا </a>
+    </ng-container>
+    </mat-nav-list>
 </ng-template>
 <main [class.bg]="bg" [class.bg-1]="!bg">
   <section>

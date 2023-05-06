@@ -1,6 +1,6 @@
 <ng-template #side>
   <div class="container_side">
-  <img src="../../../../../assets/images/logo.png">
+  <img src="../../../../../assets/images/logo.png" routerLink="/home">
   <div class="side_menu">
     <input class="sp_input_search" placeholder="بحث">
 
@@ -55,7 +55,7 @@
 
       <mat-slide-toggle [(ngModel)]="isEdit">edit</mat-slide-toggle>
     </div>
-    <div class="user">
+    <div class="user" matRipple routerLink="/profile">
       <div> {{user.username}}</div>
       <mat-icon>person</mat-icon>
     </div>
