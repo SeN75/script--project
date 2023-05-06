@@ -38,7 +38,8 @@
     @apply w-[246px];
   }
   & .mat-drawer-inner-container {
-    @apply bg-[#011627];
+    @apply bg-[#011627] w-[200px] pt-6;
+
   }
   & .side_menu  {
     @apply flex flex-col  p-3 gap-4 font-f1;

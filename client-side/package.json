@@ -9,6 +9,11 @@
     "test": "ng test",
     "deploy": "ng build && firebase deploy --only hosting"
   },
+  "author": {
+    "name": "saleh alsaggaf",
+    "email": "saleh-alsaggaf7575@outlook.com",
+    "url": "https://salehalsaggaf75.web.app/"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "^15.2.0",

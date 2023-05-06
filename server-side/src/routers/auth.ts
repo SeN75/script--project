@@ -17,6 +17,23 @@ router.post("/login", async (req, res) => {
   else if (request && request['error']) return res.status(request['error'].status || 400).json(request['error'])
   return res.status(404).json({code: 404, message: 'not found'})
 });
+
+router.get('/logout', async (req,res) => {
+  const {error} = await supabase.auth.signOut();
+  if(error) return res.status(400).json({error})
+  return res.status(200).json({'message': 'logout success'})
+});
+
+router.put('/profile', async (req, res) => {
+  const {body, query} = req;
+  if(!query['id']) return res.status(400).json({'message': "id is messing"});
+  if(!body || !Object.keys(body).length) return res.status(400).json({message: "body is messing, nothing to change, body is empty"})
+  const user = await supabase.from('profiles').update(body).eq('id', query['id']).select().single()
+  if(user.data) return res.status(201).json(user.data)
+  else if( user.error && user.error != null) return res.status(400).json({error: user.error})
+  return res.status(404).json({message: 'somthing wrong happende'})
+})
+
 router.post("/signup", async (req, res) => {
   const { body } = req;
   const { data, error } = await signup({

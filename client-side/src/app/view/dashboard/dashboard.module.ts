@@ -69,7 +69,8 @@ import { AnswerDialogComponent } from './dialogs/answer-dialog.component';
     LevelContentComponent,
     CodeEditorComponent,
     LessonDialogComponent,
-    AnswerDialogComponent
+    AnswerDialogComponent,
+
   ],
   imports: [
 CommonModule,
@@ -99,15 +100,7 @@ CommonModule,
 
   ],
   providers: [IconService, DashDialogSrvice, DashboardService,
-    {
-      provide: HIGHLIGHT_OPTIONS,
-      useValue: {
-        coreLibraryLoader: () => import('highlight.js/lib/core'),
-        languages: {
-          javascript: () => import('highlight.js/lib/languages/javascript'),
-        },
-      }
-    }
+
   ]
 })
 export class DashboardModule { }

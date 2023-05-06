@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { RegisterService } from '../../register.service';
+import { AuthService } from '../../../../services/auth.service';
 import { LoggerService } from 'src/app/services/logger.service';
 
 @Component({
@@ -16,7 +16,7 @@ export class LoginComponent {
   })
   get controls () {return this.form.controls}
 
-  constructor(private registerSrv: RegisterService, private logger: LoggerService) {
+  constructor(private registerSrv: AuthService, private logger: LoggerService) {
 
   }
 

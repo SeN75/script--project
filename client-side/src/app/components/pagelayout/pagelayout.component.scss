@@ -58,4 +58,13 @@ main {
 }
 
 
+.user {
+  @apply flex items-center text-white text-[16px] font-bold cursor-pointer;
+  & mat-icon {
+    @apply w-[48px] h-[48px] text-[48px] leading-[48px];
+  }
+}
 
+.user-mob{
+  @apply flex gap-4;
+}

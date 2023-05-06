@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree, RouterModule } from '@angular/router';
 import { Observable, of, switchMap } from 'rxjs';
-import { RegisterService } from '../register/register.service';
+import { AuthService } from '../../services/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DashboardGuard implements CanActivate {
-  constructor(private registerSrv: RegisterService, private router: Router) {}
+  constructor(private registerSrv: AuthService, private router: Router) {}
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot):
@@ -17,14 +17,21 @@ export class DashboardGuard implements CanActivate {
     | UrlTree {
 
     return this.registerSrv.user$.pipe(switchMap(userData => {
-      console.log(userData)
+      console.log(route.url)
       if(!userData || Object.keys(userData).length == 0) {
+        console.log(userData)
+
+        const type = route.paramMap.get('type');
         // user logged out
-        this.router.navigate(['register'])
+        if(route.url && route.url[0].path.includes('admin'))
+        this.router.navigate(['dashboard', 'doc'])
+        else
+        this.router.navigate(['register']);
+
         return of(true);
       }
       else {
-        const type = route.paramMap.get('type');
+        const type = route.url[0].path;
         if(!type || (type != 'admin' && type != 'doc') || !userData.role ) {
           // wrong path
           this.router.navigate(['home'])

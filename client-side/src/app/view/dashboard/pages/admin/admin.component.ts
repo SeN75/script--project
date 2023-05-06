@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { DashboardService } from './../../dashboard.service';
-import { Observable, first, map, tap, } from 'rxjs';
+import { Observable, first, map, of, tap, } from 'rxjs';
 import { Subject } from '../subject.component';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { DashDialogSrvice } from '../../dialog.service';
 import { Lesson } from '../lesson.component';
-
+import { AuthService } from 'src/app/services/auth.service';
+import { LoggerService } from 'src/app/services/logger.service';
+import { SharedService } from 'src/app/services/shared.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
@@ -23,45 +26,61 @@ export class AdminComponent implements OnInit {
 
   };
   lessons: Lesson [] = []
-  user = {
+  user: any  = {
     email: 'admin@script-project.com',
     name: 'admin script'
   }
-  activePath = ''
-  constructor(public dashSrv: DashboardService,
+  activePath = '';
+  isSmallScreen: boolean = false;;
+  constructor(
+    public dashSrv: DashboardService,
     private dashDialog: DashDialogSrvice,
     private activatedRouter: ActivatedRoute,
+    private registerSrv: AuthService,
+    private logger: LoggerService,
+    private sharedSrv: SharedService,
+    private breakpointObserver: BreakpointObserver,
     private router: Router) {
 
   }
+
   ngOnInit(): void {
     this.subjects$ = this.dashSrv.getSubjects({lesson:true}).pipe(tap(data => {
       this.subjects = data;
       return data
     }));
-
+    this.registerSrv.user$.subscribe(data =>{
+      this.user = data;
+      this.logger.log('userData ==> ', data)
+    })
     this.loadData();
+
+    this.breakpointObserver.observe('(max-width: 600px)')
+    .subscribe(result => {
+      this.logger.log('change ==> ', result)
+      this.isSmallScreen = result.matches;
+    });
   }
   async loadData() {
     const subject =  this.activatedRouter.snapshot.paramMap.get('subjectId')
     const lesson = this.activatedRouter.snapshot.paramMap.get('lesson');
-    const type = this.activatedRouter.snapshot.paramMap.get('type') as ('admin' | 'doc');
+    const type =  this.router.url.includes('admin') ? 'admin' : 'doc';
 
     this.isAdmin = type == 'admin';
     this.isEdit = this.isAdmin;
     const subjects = await this.subjects$?.pipe(first()).toPromise()
     console.log(lesson)
     if(!subject  ) {
-      // this.subjects$?.pipe(first(), map(data => data[0])).subscribe(subject => {
-      //     if(lesson)
-      //     this.router.navigate(['dashboard', 'admin', subject.id,{lesson}])
-      //     else {
-      //       console.log('here')
-      //       this.router.navigate(['dashboard', 'admin', subject.id,{lesson: 0}])
-      //       this.lessons = subject.Lesson || []
-      //     }
-      //     this.dashSrv.setCurrentSubject(subject, (+lesson! || 0))
-      // })
+      this.subjects$?.pipe(first(), map(data => data[0])).subscribe(subject => {
+          if(lesson)
+          this.router.navigate(['dashboard', 'admin', subject.id,{lesson}])
+          else {
+            console.log('here')
+            this.router.navigate(['dashboard', 'admin', subject.id,{lesson: 0}])
+            this.lessons = subject.Lesson || []
+          }
+          this.dashSrv.setCurrentSubject(subject, type, 0)
+      })
      }
      else {
        this.activePath = subject +"";
@@ -84,9 +103,14 @@ export class AdminComponent implements OnInit {
       })
     }, 'delete', 'حذف')
   }
+
+  toggel() {
+    console.log('1')
+    this.sharedSrv.toggleSidenav.next(true)
+  }
   async selectSubject(sub: Subject) {
-    const type = this.activatedRouter.snapshot.paramMap.get('type')
-    this.dashSrv.setCurrentSubject(sub, type as any)
+    const type = this.router.url.includes('admin') ? 'admin' : 'doc'
+    this.dashSrv.setCurrentSubject(sub, type , 0)
     setTimeout(async () => {
 
       const user: any = await this.dashSrv.getSubjectUserResult({subject_id: sub.id!})
@@ -97,6 +121,6 @@ export class AdminComponent implements OnInit {
         console.log(total)
       }
       console.log(user)
-    }, 1000)
+    }, 0)
   }
 }

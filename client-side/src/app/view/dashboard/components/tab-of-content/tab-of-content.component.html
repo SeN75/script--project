@@ -1,1 +1,10 @@
-<p>tab-of-content works!</p>
+<nav>
+  <header>محتويات الدرس</header>
+
+  <ng-container *ngFor="let content of contents$ | async">
+    <div>
+      <div>{{content.title}}</div>
+      <p *ngIf> {{content.subtitle}}</p>
+    </div>
+  </ng-container>
+</nav>

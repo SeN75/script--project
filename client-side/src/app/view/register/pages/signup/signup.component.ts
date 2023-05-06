@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { RegisterService } from '../../register.service';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -15,7 +15,7 @@ export class SignupComponent {
     password: new FormControl<string>('', [Validators.required]),
   });
   get controls() {return this.form.controls}
-  constructor(private registerSrv: RegisterService) {
+  constructor(private registerSrv: AuthService) {
 
   }
 
