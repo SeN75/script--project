@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { DashboardService } from './../../dashboard.service';
-import { Observable, first, map, tap, } from 'rxjs';
+import { Observable, first, map, of, tap, } from 'rxjs';
 import { Subject } from '../subject.component';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { DashDialogSrvice } from '../../dialog.service';
 import { Lesson } from '../lesson.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { LoggerService } from 'src/app/services/logger.service';
-
+import { SharedService } from 'src/app/services/shared.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
@@ -29,16 +30,20 @@ export class AdminComponent implements OnInit {
     email: 'admin@script-project.com',
     name: 'admin script'
   }
-  activePath = ''
+  activePath = '';
+  isSmallScreen: boolean = false;;
   constructor(
     public dashSrv: DashboardService,
     private dashDialog: DashDialogSrvice,
     private activatedRouter: ActivatedRoute,
     private registerSrv: AuthService,
     private logger: LoggerService,
+    private sharedSrv: SharedService,
+    private breakpointObserver: BreakpointObserver,
     private router: Router) {
 
   }
+
   ngOnInit(): void {
     this.subjects$ = this.dashSrv.getSubjects({lesson:true}).pipe(tap(data => {
       this.subjects = data;
@@ -49,6 +54,12 @@ export class AdminComponent implements OnInit {
       this.logger.log('userData ==> ', data)
     })
     this.loadData();
+
+    this.breakpointObserver.observe('(max-width: 600px)')
+    .subscribe(result => {
+      this.logger.log('change ==> ', result)
+      this.isSmallScreen = result.matches;
+    });
   }
   async loadData() {
     const subject =  this.activatedRouter.snapshot.paramMap.get('subjectId')
@@ -91,6 +102,11 @@ export class AdminComponent implements OnInit {
 
       })
     }, 'delete', 'حذف')
+  }
+
+  toggel() {
+    console.log('1')
+    this.sharedSrv.toggleSidenav.next(true)
   }
   async selectSubject(sub: Subject) {
     const type = this.router.url.includes('admin') ? 'admin' : 'doc'

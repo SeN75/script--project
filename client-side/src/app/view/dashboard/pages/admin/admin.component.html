@@ -1,4 +1,5 @@
 <ng-template #side>
+  <div class="container_side">
   <img src="../../../../../assets/images/logo.png">
   <div class="side_menu">
     <input class="sp_input_search" placeholder="بحث">
@@ -21,15 +22,24 @@
       </ng-container>
     </ul>
 
+    <div class="home_section" matRipple routerLink="/home">
+      الصفحة الرئيسية <mat-icon>fast_rewind</mat-icon>
+    </div>
   </div>
+</div>
 </ng-template>
 <ng-template #nav>
   <mat-toolbar>
     <div class="progress_section">
-      <button mat-icon-button>
+      <button mat-icon-button (click)="toggel()" class="sidebutton">
         <mat-icon>menu</mat-icon>
       </button>
-      تقدمك الحالي <div class="user_progress">
+
+      <span *ngIf="!isAdmin">
+        تقدمك الحالي
+      </span>
+
+      <div class="user_progress" *ngIf="!isAdmin">
         <div class="number">
           {{progress?.total_solved || 0}} / {{progress?.total || 0}}
         </div>
@@ -69,7 +79,7 @@
   </section>
 </ng-template>
 
-<pagelayout [template]="page" [sideTemplate]="side" [navTemplate]="nav" [open]="true">
+<pagelayout [template]="page" [sideTemplate]="side" [navTemplate]="nav" [open]="!isSmallScreen">
 
 </pagelayout>
 <!-- <mat-drawer-container autosize class="admin">

@@ -32,7 +32,23 @@ mat-toolbar {
   }
 
 }
-
+.home_section {
+  @apply border-t-[1px] border-t-[#393A42] text-white flex justify-around font-f1 text-[15px] font-bold pt-6  pb-2;
+  margin-block-start: auto;
+}
+.sidebutton {
+  @apply sm:block md:hidden;
+}
 .block-2 {
   @apply flex flex-col gap-8;
+}
+.subject_menu {
+  @apply flex flex-col flex-1;
+}
+.container_side {
+  @apply flex flex-col h-full ;
+}
+
+.side_menu {
+  @apply flex-1;
 }
