@@ -1,0 +1,46 @@
+
+<pagelayout [template]="home"></pagelayout>
+<ng-template #home>
+  <main *ngIf="user$ | async as user">
+    <img src="../../../assets/images/proflie.png">
+    <header>{{user.username}}</header>
+    <div class="info">
+
+      <div>
+          <label>تاريخ الانضمام</label>
+          <p>{{user.created_at | date:'dd/MM/yyyy'}}</p>
+      </div>
+
+      <div>
+          <label>التقدم</label>
+          <p>{{user.point || 0}}xp</p>
+      </div>
+
+    </div>
+
+    <form [formGroup]="form">
+
+      <div class="register_group " [class.invalid]="controls['email'].invalid && controls['email'].errors && controls['email'].touched">
+        <label>email *</label>
+        <div class="control">
+          <input placeholder="البريد" formControlName="email">
+        </div>
+        <small>error</small>
+      </div>
+
+      <div class="register_group " [class.invalid]="controls['username'].invalid && controls['username'].errors && controls['username'].touched">
+        <label>Username *</label>
+        <div class="control">
+          <input placeholder="اسم المستخدم" formControlName="username">
+        </div>
+        <small>error</small>
+      </div>
+
+    </form>
+<div class="action">
+  <button mat-button class="save_button" (click)="update()">تعديل</button>
+  <button mat-button class="logout_button" (click)="logout()">تسجيل الخروج</button>
+</div>
+  </main>
+
+</ng-template>

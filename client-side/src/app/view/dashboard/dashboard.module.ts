@@ -48,7 +48,6 @@ import { CodeEditorComponent } from './components/code-editor.component';
 import { LessonDialogComponent } from './dialogs/lesson-dialog.component';
 import { ComponentsModule } from 'src/app/components/components.module';
 import { AnswerDialogComponent } from './dialogs/answer-dialog.component';
-import { ProfileComponent } from './pages/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +70,7 @@ import { ProfileComponent } from './pages/profile/profile.component';
     CodeEditorComponent,
     LessonDialogComponent,
     AnswerDialogComponent,
-    ProfileComponent
+
   ],
   imports: [
 CommonModule,

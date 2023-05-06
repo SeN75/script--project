@@ -11,12 +11,13 @@ import { LeaderBoardComponent } from './components/leaderboard.component';
 @NgModule({
   declarations: [
     MainComponent,
-    LeaderBoardComponent
+    LeaderBoardComponent,
+
   ],
   imports: [
   CommonModule,
   TranslateModule,
-  RouterModule.forChild([{path:'', component: MainComponent}]),
+  RouterModule.forChild([{path:'', component: MainComponent}, ]),
   ComponentsModule
   ]
 })

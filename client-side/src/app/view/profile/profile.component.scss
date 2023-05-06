@@ -1,0 +1,85 @@
+
+main {
+  @apply flex flex-col items-center gap-8 pt-8;
+
+  & header {
+    @apply lg:text-[64px] md:text-[52px] sm:text-[40px] text-white font-f1 font-bold;
+  }
+
+  & .info {
+    @apply  grid grid-cols-2 w-full;
+
+    & div {
+      @apply flex flex-col gap-4 font-f1 text-white items-center;
+      @apply lg:text-[40px] md:text-[32px] sm:text-[24px] font-bold;
+      &:first-child {
+        @apply border-l-[1px] border-solid border-l-[#595767];
+      }
+    }
+
+  }
+}
+
+
+form {
+  @apply flex justify-between gap-4 w-[80%] md:flex-row sm:flex-col;
+  & .register_group {
+    @apply flex flex-col gap-1 w-full;
+    & label {
+      @apply text-white font-f1 text-[20px] self-end;
+      @apply transition-all duration-300 ease-in-out;
+    }
+    & .control {
+      @apply rounded-full  py-4 px-6 font-f1 md:text-[22px] sm:text-[18px] text-white flex border-solid  border-[1px] border-transparent items-center;
+      @apply transition-all duration-300 ease-in-out;
+      background: rgba(69, 79, 87, 0.7);
+      & input {
+        @apply flex-1 border-none bg-transparent outline-transparent w-full;
+        &:focus {
+          @apply outline-transparent border-transparent;
+          outline: none;
+        }
+      }
+      input:-webkit-autofill,
+      input:-webkit-autofill:hover,
+      input:-webkit-autofill:focus,
+      input:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 30px #3b434d inset !important;
+        color: #0a2439
+      }
+      & mat-icon {
+        @apply cursor-pointer;
+      }
+    }
+    & small {
+      @apply transition-all duration-300 ease-in-out opacity-0;
+    }
+    &.invalid {
+      & label {
+        @apply text-red-500;
+        @apply transition-all duration-300 ease-in-out;
+      }
+      & .control {
+        @apply text-red-500 border-red-500;
+        @apply transition-all duration-300 ease-in-out;
+      }
+      & small {
+        @apply text-red-500 opacity-100;
+        @apply transition-all duration-300 ease-in-out;
+      }
+    }
+  }
+}
+
+.action {
+  @apply  border-none;
+}
+
+.save_button {
+  @apply bg-[#3BC85BB2] border-black text-[24px] w-[200px] h-[56px] border-solid border-[1.5px];
+}
+
+
+.logout_button {
+  @apply bg-transparent border-white text-[24px] w-[200px] h-[56px] border-solid border-[1.5px];
+}

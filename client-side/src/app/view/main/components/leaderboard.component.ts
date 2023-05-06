@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { MainService } from '../main.service';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'leaderboard',
@@ -13,43 +15,59 @@ import { Component } from '@angular/core';
           @apply font-bold font-f1 lg:text-[24px] md:text-[22px] md:text-[18px] text-white;
         }
         & .board {
-          @apply flex flex-col gap-4 py-6 bg-[#011627] rounded-lg w-full items-center pt-12;
-          & header {
-            @apply flex justify-between font-f1 lg:text-[20px] md:text-[18px] md:text-[16px] font-bold text-white w-full  w-[95%] px-6;
+          @apply py-6 bg-[#011627] rounded-lg w-full items-center pt-12 px-8;
+          & th {
+            @apply font-f1 lg:text-[20px] md:text-[18px] md:text-[16px] font-bold text-white;
           }
-          & .place {
-            @apply flex justify-between gap-4 items-center min-h-[86px] w-[95%] px-6 rounded-[10px];
-            background: linear-gradient(
-              180deg,
-              rgba(0, 255, 57, 0.15) 0%,
-              rgba(0, 255, 57, 0.06) 100%
-            );
-            border: 1.5px solid rgba(0, 0, 0, 0.5);
-            & .name {
-              @apply flex gap-4 items-center font-bold lg:text-[20px] md:text-[18px] md:text-[16px];
-              & .avatar {
-                @apply flex justify-center items-center bg-[#011627] rounded-[9px] h-[50px] w-[50px] text-[32px];
-              }
-            }
+          border-collapse: separate;
+          border-spacing: 0 1.2rem;
 
-            & .point {
-              @apply lg:text-[20px] md:text-[18px] md:text-[16px] font-bold text-white ;
-            }
+        }
+      }
 
-            & .level {
-              @apply lg:text-[48px] md:text-[38px] sm:text-[32px] font-f1 font-bold text-white;
-              &.st {
-                @apply text-[#FDCD25];
-              }
-              &.nd {
-                @apply text-[#B3C2DC];
+tbody tr {
+        background: linear-gradient(
+          180deg,
+          rgba(0, 255, 57, 0.15) 0%,
+          rgba(0, 255, 57, 0.06) 100%
+        );
 
-              }
-              &.rd {
-                @apply text-[#773B06];
+        & .name {
+          @apply flex gap-4 items-center font-bold lg:text-[20px] md:text-[18px] md:text-[16px];
+          & .avatar {
+            @apply flex justify-center items-center bg-[#011627] rounded-[9px] h-[50px] w-[50px] text-[32px];
+          }
+        }
+        & td {
+          border: 1.5px solid rgba(0, 0, 0, 0.5);
+          border-right: none;
+          border-left: none;
+          @apply px-2 text-center;
+          &:first-child {
 
-              }
-            }
+            @apply rounded-tr-[16px] rounded-br-[16px];
+            border-right: 1.5px solid rgba(0, 0, 0, 0.5);
+          }
+          &:last-child {
+            border-left: 1.5px solid rgba(0, 0, 0, 0.5);
+            @apply rounded-tl-[16px] rounded-bl-[16px];
+
+          }
+        }
+        & .point {
+          @apply lg:text-[20px] md:text-[18px] md:text-[16px] font-bold text-white;
+        }
+
+        & .level {
+          @apply lg:text-[48px] md:text-[38px] sm:text-[32px] font-f1 font-bold text-white;
+          &.st {
+            @apply text-[#ffd700];
+          }
+          &.nd {
+            @apply text-[#808080];
+          }
+          &.rd {
+            @apply text-[#CD7F32];
           }
         }
       }
@@ -59,50 +77,44 @@ import { Component } from '@angular/core';
     <main>
       <h2>افضل المتصدرين</h2>
       <p>الافضل في جميع الاوقات</p>
+      <table class="board">
+        <thead>
+          <tr>
+            <th>المستخدم</th>
+            <th>النقاط</th>
+            <th>المركز</th>
+          </tr>
+        </thead>
 
-      <div class="board">
-        <header>
-          <div>المستخدم</div>
-          <div>النقاط</div>
-          <div>المركز</div>
-        </header>
+        <tbody>
+          <tr *ngFor="let user of board$ | async" ckass="place">
+            <td>
 
-        <div class="place">
-          <div class="name">
-            <div class="avatar">👑</div>
-            <span>@name</span>
-          </div>
-
-          <div class="point">10000 xp</div>
-
-          <div class="level st">1</div>
-        </div>
-
-        <div class="place">
-          <div class="name">
-            <div class="avatar">👑</div>
-            <span>@name</span>
-          </div>
-
-          <div class="point">10000 xp</div>
-
-          <div class="level nd">1</div>
-        </div>
-
-        <div class="place">
-          <div class="name">
-            <div class="avatar">👑</div>
-            <span>@name</span>
-          </div>
-
-          <div class="point">10000 xp</div>
-
-          <div class="level rd">1</div>
-        </div>
-
-
-      </div>
+              <div class="name">
+                <div class="avatar">👑</div>
+                <span>@{{ user.username }}</span>
+              </div>
+            </td>
+            <td class="point">{{ user.point }} xp</td>
+            <td
+              class="level"
+              [class.st]="user.level == 1"
+              [class.nd]="user.level == 2"
+              [class.rd]="user.level == 3"
+            >
+              {{ user.level }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </main>
   `,
 })
-export class LeaderBoardComponent {}
+export class LeaderBoardComponent {
+  constructor(private mainSrv: MainService) {
+    this.board$ = this.mainSrv.getLeaderBoard();
+  }
+  board$: Observable<{ username: string; point: number; level: number }[]> = of(
+    []
+  );
+}
