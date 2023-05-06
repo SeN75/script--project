@@ -19,7 +19,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
         <p>{{data.text}}</p>
 
       <mat-dialog-actions>
-        <button mat-raised-button color="primary" *ngIf="data.actionName" (click)="action()">{{data.actionName || 'استمرار'}}</button>
+        <button mat-raised-button color="primary" *ngIf="data.actionName" (click)="action(); close()">{{data.actionName || 'استمرار'}}</button>
         <button mat-raised-button (click)="close()" >{{'اغلاق'}}</button>
       </mat-dialog-actions>
     </mat-dialog-content>

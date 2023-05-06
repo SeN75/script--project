@@ -62,6 +62,7 @@ export class DashboardService {
         this.getContentByLessonId(v.id!).subscribe((data) => {
           this.currentContents.next(data);
         });
+      else  this.currentContents.next([]);
     });
   }
   setCurrentSubject(subject: Subject, type: string, lesson?: number) {

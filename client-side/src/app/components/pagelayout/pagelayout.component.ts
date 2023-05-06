@@ -11,6 +11,9 @@ import { SharedService } from 'src/app/services/shared.service';
   styleUrls: ['./pagelayout.component.scss']
 })
 export class PagelayoutComponent implements AfterViewInit{
+  aboutus() {
+ window.open('https://salehalsaggaf75.web.app/', '_self')
+   }
   mobileQuery: MediaQueryList;
 
   @Input() template: TemplateRef<any> | undefined;
@@ -29,6 +32,7 @@ export class PagelayoutComponent implements AfterViewInit{
     this._mobileQueryListener = () =>  {
       changeDetectorRef.detectChanges();
     };
+
     this.mobileQuery.addListener(this._mobileQueryListener);
 
     this.sideSub = this.sharedSrv.toggleSidenav$.subscribe(value => {
@@ -49,4 +53,6 @@ export class PagelayoutComponent implements AfterViewInit{
   toggle() {
     this.sidenav.toggle();
  }
+
+
 }

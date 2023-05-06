@@ -11,7 +11,7 @@
       <li routerLink="/register">
         سجل الدخول
       </li>
-      <li>
+      <li  (click)="aboutus()">
         معلومات عنا
       </li>
     </ul>
@@ -26,7 +26,7 @@
   <mat-nav-list>
     <a mat-list-item routerLink="/dashboard">ابدا التعلم</a>
     <a mat-list-item routerLink="/register">سجل الدخول</a>
-    <a mat-list-item routerLink=".">معلومات عنا </a>
+    <a mat-list-item  (click)="aboutus()">معلومات عنا </a>
   </mat-nav-list>
 </ng-template>
 <main [class.bg]="bg" [class.bg-1]="!bg">

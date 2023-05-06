@@ -1,9 +1,11 @@
 <section>
     <header> المستوى الحالي</header>
-
-    <select [formControl]="levelCtrl">
+    <mat-select [formControl]="levelCtrl" class="level">
+      <mat-option *ngFor="let lesson of lessons$ | async" [value]="lesson.id">{{lesson.title}}</mat-option>
+    </mat-select>
+    <!-- <select [formControl]="levelCtrl">
       <option *ngFor="let lesson of lessons$ | async" [value]="lesson.id">{{lesson.title}}</option>
-    </select>
+    </select> -->
 <div class="action" *ngIf="isEdit">
   <button mat-raised-button color="primary" (click)="addLesson()">اضافة</button>
   <button mat-stroked-button color="warn" (click)="deleteLesson()">حذف</button>

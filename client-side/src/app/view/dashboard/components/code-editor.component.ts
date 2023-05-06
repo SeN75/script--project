@@ -3,6 +3,8 @@ import { converter } from 'src/app/common/coder';
 import { Exercise } from '../pages/exerices.component';
 import { DashDialogSrvice } from '../dialog.service';
 import { DashboardService } from '../dashboard.service';
+import { AuthService, User } from 'src/app/services/auth.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'code-editor',
   template: `
@@ -26,9 +28,10 @@ export class CodeEditorComponent implements AfterViewInit{
   @Input() code:string = '';
   @Input() exercise!: Exercise
   @ViewChild('codeBlcok', { static: false }) codeBlcok !: ElementRef<HTMLElement>;
-  key: string = ''
-  constructor(private renderer:Renderer2, private dashDialog: DashDialogSrvice, private dashSrv: DashboardService) {
-
+  key: string = '';
+  userData: User  | null = null
+  constructor(private renderer:Renderer2, private dashDialog: DashDialogSrvice, private dashSrv: DashboardService, private auth: AuthService, private router: Router ) {
+    this.auth.user$.subscribe(userData => this.userData = userData)
   }
   ngAfterViewInit(): void {
  this.key ='kay_'+ this.exercise.id!.substring(0,5);
@@ -69,10 +72,23 @@ export class CodeEditorComponent implements AfterViewInit{
       console.log(notCorrect)
     }
     else {
-      this.dashSrv.sendAnswers({execise_id: this.exercise.id!,userAnswer}).then(success => {
-      this.dashDialog.answer({message: "مبرووووووك !🥳", text: 'حلك صح، تم اضافة '+this.exercise.point+' نقطة الى حسابك'})
+      console.log('user code ==> ', this.userData)
+      if(this.userData && Object.keys(this.userData).length) {
 
-      })
+        this.dashSrv.sendAnswers({execise_id: this.exercise.id!,userAnswer}).then(success => {
+          if(success)
+          this.dashDialog.answer({message: "مبرووووووك !🥳", text: 'حلك صح، تم اضافة '+this.exercise.point+' نقطة الى حسابك'})
+
+        })
+      } else  {
+        // كفو عليك، حلك صح 🥳
+        // لكن للاسف مانقدر نحسب لك نقاط عشانك منت مسجل 🤐
+        // سجل دخولك ونافس معانا 😏
+        this.dashDialog.answer({message: "كفو عليك، حلك صح 🥳", text: 'لكن للاسف مانقدر نحسب لك نقاط عشانك منت مسجل 🤐\n سجل دخولك ونافس معانا 😏', actionName: 'سجل الدخول', action: () => {
+          this.router.navigate(['/register', 'login'])
+        },})
+
+      }
     }
   }
 }
