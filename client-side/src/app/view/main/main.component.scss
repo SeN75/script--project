@@ -1,5 +1,7 @@
 
-
+main {
+  @apply flex flex-col gap-20 pb-10;
+}
 section {
   @apply flex flex-col w-[95%] max-w-[1350px] items-center gap-10 py-8 mx-auto;
 
