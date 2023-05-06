@@ -41,7 +41,7 @@ export class DashDialogSrvice {
   }
   answer({message, text,actionName, action}: {
     message: string,
-    text: string,
+    text: string[],
     actionName?: string,
     action?: () => any
   }) {

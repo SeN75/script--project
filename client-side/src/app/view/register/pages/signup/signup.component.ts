@@ -23,6 +23,6 @@ export class SignupComponent {
     const {value} = this.form;
     if(this.form.valid)
       this.registerSrv.signup(value as any)
-
+    else this.registerSrv.alert('الرجاء التحقق من جميع المدخلات', false)
   }
 }

@@ -4,11 +4,11 @@
       <header>أهلا بعودتك</header>
       <form [formGroup]="form">
         <div class="register_group " [class.invalid]="controls['email'].invalid && controls['email'].errors && controls['email'].touched">
-          <label>Username *</label>
+          <label>email *</label>
           <div class="control">
-            <input placeholder="اسم المستخدم" formControlName="email">
+            <input placeholder="البريد الالكتروني" formControlName="email">
           </div>
-          <small>error</small>
+          <small *ngIf="controls['email']&& controls['email']['errors']&& controls['email']['errors']['email']">{{controls['email']['errors']['email'] ? 'بريد الالكتروني غير صالح' : 'مطلوب'}}</small>
         </div>
 
         <div class="register_group" [class.invalid]="controls['password'].invalid && controls['password'].errors && controls['password'].touched">
@@ -18,7 +18,7 @@
               <mat-icon (click)="hide = !hide" matRipple>{{  hide ?'visibility' : 'visibility_off'}}</mat-icon>
 
           </div>
-          <small>error</small>
+          <small>مطلوب</small>
         </div>
 
 

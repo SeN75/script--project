@@ -425,12 +425,13 @@ export class DashboardService {
       .toPromise()
       .then((success) => {
         this.logger.log('user proggress =>', success);
-        return true;
+        return success;
       })
       .catch((error) => {
         this.logger.error('answer qustion ==> ', error);
+        if(error.status != 406 )
         this.alert('حدث خطا اثناء ارسال الطلب', false);
-        return false;
+        return error;
       });
   }
 
