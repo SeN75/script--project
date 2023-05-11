@@ -68,7 +68,7 @@ export class CodeEditorComponent implements AfterViewInit{
     }
     // alert message
     if(!allChecked) {
-      this.dashDialog.answer({message: "محاولة خاطئة 🫠", text: 'الرجاء المحاولة مرة اخرى'})
+      this.dashDialog.answer({message: "محاولة خاطئة 🫠", text: ['الرجاء المحاولة مرة اخرى']})
       console.log(notCorrect)
     }
     else {
@@ -76,15 +76,18 @@ export class CodeEditorComponent implements AfterViewInit{
       if(this.userData && Object.keys(this.userData).length) {
 
         this.dashSrv.sendAnswers({execise_id: this.exercise.id!,userAnswer}).then(success => {
-          if(success)
-          this.dashDialog.answer({message: "مبرووووووك !🥳", text: 'حلك صح، تم اضافة '+this.exercise.point+' نقطة الى حسابك'})
 
-        })
+          if(success && success.status != 406)
+          this.dashDialog.answer({message: "مبرووووووك !🥳", text: ['حلك صح، تم اضافة '+this.exercise.point+' نقطة الى حسابك']})
+          else if (success.status  == 406)
+          this.dashDialog.answer({message: "كفو عليك، حلك صح 🥳", text: ['لكن للاسف مانقدر نحسب لك نقاط عشانك حليته اول 👀', ' تقدر تكمل وتحل وتكمل في المستويات الجاية 😎'] })
+
+        }).catch( erro => console.warn(erro))
       } else  {
         // كفو عليك، حلك صح 🥳
         // لكن للاسف مانقدر نحسب لك نقاط عشانك منت مسجل 🤐
         // سجل دخولك ونافس معانا 😏
-        this.dashDialog.answer({message: "كفو عليك، حلك صح 🥳", text: 'لكن للاسف مانقدر نحسب لك نقاط عشانك منت مسجل 🤐\n سجل دخولك ونافس معانا 😏', actionName: 'سجل الدخول', action: () => {
+        this.dashDialog.answer({message: "كفو عليك، حلك صح 🥳", text:  ['لكن للاسف مانقدر نحسب لك نقاط عشانك منت مسجل 🤐', 'سجل دخولك ونافس معانا 😏'], actionName: 'سجل الدخول', action: () => {
           this.router.navigate(['/register', 'login'])
         },})
 

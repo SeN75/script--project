@@ -16,7 +16,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
         <div class="message">
         {{data.message}}
         </div>
-        <p>{{data.text}}</p>
+        <p *ngFor="let text of data.text">{{text}}</p>
 
       <mat-dialog-actions>
         <button mat-raised-button color="primary" *ngIf="data.actionName" (click)="action(); close()">{{data.actionName || 'استمرار'}}</button>
@@ -26,12 +26,12 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
   `,
   styles: [`
   mat-dialog-content {
-    @apply flex flex-col gap-6 font-f1 text-white leading-[1];
+    @apply flex flex-col gap-6 font-f1 text-white leading-[1.2];
     & div.message {
-      @apply text-center font-bold text-[28px] leading-[1];
+      @apply text-center font-bold text-[28px] leading-[1.2]  text-white;
     }
     & p {
-      @apply text-center font-normal text-[22px] leading-[1];
+      @apply text-center font-normal text-[22px] leading-[1.2]  text-white;
     }
     & mat-dialog-actions {
       @apply flex justify-center gap-6;
@@ -46,7 +46,7 @@ export class AnswerDialogComponent {
     @Inject(MAT_DIALOG_DATA)
     public data:{
       message: string,
-      text: string,
+      text: string[],
       actionName?: string,
       action?: () => any
     },){

@@ -73,9 +73,10 @@ export class LevelContentComponent implements OnInit {
           subdescription: content.subdescription,
           exercises: content.exercises,
         }));
+        this.logger.log('group ==> ', group)
         group?.forEach((g) => {
           const exercises: any = g.exercises?.map((e) => {
-            return new FormGroup({
+            return  new FormGroup({
               level: new FormControl(e.level),
               id: new FormControl(e.id),
               code: new FormControl(e.code),
@@ -97,10 +98,10 @@ export class LevelContentComponent implements OnInit {
             exercises: new FormArray(exercises),
           });
           this.contentsForms.push(form as any);
-          this.logger.log('exercises ==< ', exercises);
+          this.logger.log('exercises ==< ', form.controls.exercises);
         });
         this.logger.log('contentForm ==< ', group);
-        this.logger.log('contentForm ==< ', this.contentsForms);
+        this.logger.log('contentForm ==< ', this.contentsForms.controls);
       });
     this.lesson$.subscribe((lesson) => {
       if (lesson) this.lessonTitleCtrl.setValue(lesson.title);
@@ -202,10 +203,8 @@ export class LevelContentComponent implements OnInit {
         this.contentsForms.controls[index].value
       );
     } else {
-      this.logger.log(
-        'content value - edit -',
-        this.contentsForms.controls[index].value
-      );
+      this.logger.log('index ==> ',  this.contentsForms.controls)
+
       this.dashSrv.updateExercies(value).then((success) => {
         if (success)
           this.contentsForms.controls[contentIndex].controls[

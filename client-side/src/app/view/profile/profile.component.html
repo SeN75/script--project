@@ -25,7 +25,7 @@
         <div class="control">
           <input placeholder="البريد" formControlName="email">
         </div>
-        <small>error</small>
+        <small *ngIf="controls['email']&& controls['email']['errors']&& controls['email']['errors']['email']">{{controls['email']['errors']['email'] ? 'بريد الالكتروني غير صالح' : 'مطلوب'}}</small>
       </div>
 
       <div class="register_group " [class.invalid]="controls['username'].invalid && controls['username'].errors && controls['username'].touched">
@@ -33,7 +33,7 @@
         <div class="control">
           <input placeholder="اسم المستخدم" formControlName="username">
         </div>
-        <small>error</small>
+        <small>مطلوب</small>
       </div>
 
     </form>

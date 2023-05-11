@@ -121,7 +121,7 @@ router.post("/", async (req, res) => {
   if (check != null && check.isSolved)
     return res
       .status(HttpStatusCode.NotAcceptable)
-      .json({ message: "user already solve this exercise", check });
+      .json({ message: "user already solve this exercise", oldSolution: check, code: 406 });
   // get exercise
   console.log("before", body["exercise_id"]);
   const exericseReq = await supabase

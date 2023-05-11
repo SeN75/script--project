@@ -35,7 +35,7 @@ router.get("/", async (req, res) => {
       .limit(limit);
     if (param["langauge"]) request = request.eq("language", param["language"]);
     if(param["lesson"]) request = request.eq('Lesson.isDeleted', false)
-    const { data, error } = await request;
+    const { data, error } = await request.order('level');
     console.log("dafdafd ==> ", error);
 
     if (data) return res.status(HttpStatusCode.Ok).json(data as Subject[]);

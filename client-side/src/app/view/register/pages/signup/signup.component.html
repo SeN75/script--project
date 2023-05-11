@@ -12,7 +12,7 @@
         <div class="control">
           <input placeholder="اسم المستخدم" formControlName="username">
         </div>
-        <small>error</small>
+        <small>مطلوب</small>
       </div>
 
       <div class="register_group " [class.invalid]="controls['email'].invalid && controls['email'].errors && controls['email'].touched">
@@ -20,7 +20,7 @@
         <div class="control">
           <input placeholder="البريد الالكتروني" formControlName="email">
         </div>
-        <small>error</small>
+        <small *ngIf="controls['email']&& controls['email']['errors']&& controls['email']['errors']['email']">{{controls['email']['errors']['email'] ? 'بريد الالكتروني غير صالح' : 'مطلوب'}}</small>
       </div>
 
       <div class="register_group" [class.invalid]="controls['password'].invalid && controls['password'].errors && controls['password'].touched">
@@ -29,10 +29,10 @@
           <input placeholder="كلمة المرور" formControlName="password" [type]="!hide ? 'password': 'text'">
             <mat-icon (click)="hide = !hide" matRipple>{{  !hide ?'visibility_off' :  'visibility'}}</mat-icon>
         </div>
-        <small>error</small>
+        <small>مطلوب</small>
       </div>
 
-      <button class="register" mat-raised-button (click)="signup()">
+      <button class="register" mat-raised-button (click)="signup()" >
         إنشاء حساب
       </button>
     </form>
