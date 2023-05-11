@@ -49,7 +49,7 @@ export class LevelSectionComponent implements OnInit {
     });
   }
   loadData() {
-    this.lessons$ = this.dashSrv.lessons$;
+    this.lessons$ = this.dashSrv.lessons$.pipe(map(data => data.sort((a,b) => a.level - b.level)));
 
     this.lessons$.subscribe((v) => {});
   }
