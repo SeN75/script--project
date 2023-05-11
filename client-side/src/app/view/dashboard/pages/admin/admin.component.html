@@ -2,10 +2,10 @@
   <div class="container_side">
   <img src="../../../../../assets/images/logo.png" routerLink="/home">
   <div class="side_menu">
-    <input class="sp_input_search" placeholder="بحث">
+    <input class="sp_input_search" placeholder="بحث" [formControl]="searchCtrl">
 
     <ul class="subject_menu">
-      <ng-container *ngFor="let sub of subjects$ | async">
+      <ng-container *ngFor="let sub of filterSubject$ | async">
         <li class="subject" [class.active]="dashSrv.currentSubject?.id == sub.id"  (click)="selectSubject(sub)">
           <span class="icon"><mat-icon svgIcon="javascript"></mat-icon> </span>
           <span class="name">{{sub.title}}</span>
